@@ -1,5 +1,12 @@
 # Jukebox
 
+Obviously you will first need Elixir:
+
+```bash
+brew update
+brew install elixir
+```
+
 To start your Phoenix app:
 
   * Install dependencies with `mix deps.get`
