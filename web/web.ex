@@ -1,12 +1,12 @@
-defmodule Jukebox.Web do
+defmodule Juicebox.Web do
   @moduledoc """
   A module that keeps using definitions for controllers,
   views and so on.
 
   This can be used in your application as:
 
-      use Jukebox.Web, :controller
-      use Jukebox.Web, :view
+      use Juicebox.Web, :controller
+      use Juicebox.Web, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -18,9 +18,8 @@ defmodule Jukebox.Web do
 
   def model do
     quote do
-      use Ecto.Schema
+      use Ecto.Model
 
-      import Ecto
       import Ecto.Changeset
       import Ecto.Query, only: [from: 1, from: 2]
     end
@@ -30,12 +29,11 @@ defmodule Jukebox.Web do
     quote do
       use Phoenix.Controller
 
-      alias Jukebox.Repo
-      import Ecto
+      alias Juicebox.Repo
+      import Ecto.Model
       import Ecto.Query, only: [from: 1, from: 2]
 
-      import Jukebox.Router.Helpers
-      import Jukebox.Gettext
+      import Juicebox.Router.Helpers
     end
   end
 
@@ -49,9 +47,7 @@ defmodule Jukebox.Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import Jukebox.Router.Helpers
-      import Jukebox.ErrorHelpers
-      import Jukebox.Gettext
+      import Juicebox.Router.Helpers
     end
   end
 
@@ -65,10 +61,9 @@ defmodule Jukebox.Web do
     quote do
       use Phoenix.Channel
 
-      alias Jukebox.Repo
-      import Ecto
+      alias Juicebox.Repo
+      import Ecto.Model
       import Ecto.Query, only: [from: 1, from: 2]
-      import Jukebox.Gettext
     end
   end
 

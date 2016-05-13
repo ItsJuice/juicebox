@@ -1,4 +1,4 @@
-defmodule Jukebox.ChannelCase do
+defmodule Juicebox.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -20,20 +20,19 @@ defmodule Jukebox.ChannelCase do
       # Import conveniences for testing with channels
       use Phoenix.ChannelTest
 
-      alias Jukebox.Repo
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query, only: [from: 1, from: 2]
+      alias Juicebox.Repo
+      import Ecto.Model
+      import Ecto.Query, only: [from: 2]
 
 
       # The default endpoint for testing
-      @endpoint Jukebox.Endpoint
+      @endpoint Juicebox.Endpoint
     end
   end
 
   setup tags do
     unless tags[:async] do
-      Ecto.Adapters.SQL.restart_test_transaction(Jukebox.Repo, [])
+      Ecto.Adapters.SQL.restart_test_transaction(Juicebox.Repo, [])
     end
 
     :ok

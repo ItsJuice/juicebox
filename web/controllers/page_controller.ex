@@ -1,5 +1,5 @@
-defmodule Jukebox.PageController do
-  use Jukebox.Web, :controller
+defmodule Juicebox.PageController do
+  use Juicebox.Web, :controller
 
   def index(conn, _params) do
     render conn, "index.html"

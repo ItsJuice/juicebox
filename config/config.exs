@@ -6,12 +6,12 @@
 use Mix.Config
 
 # Configures the endpoint
-config :jukebox, Jukebox.Endpoint,
+config :juicebox, Juicebox.Endpoint,
   url: [host: "localhost"],
   root: Path.dirname(__DIR__),
-  secret_key_base: "6jUZkB6ozqmKMWrtDMqak0PKZGHynspQipl6/RT8PIpnucYi/91kYbT7JK4+XBU7",
+  secret_key_base: "No9mtCruMHSAH008T+QrGyMu1wYUK41cycpxrQBEACwfDznEzo6yI73Yn+IUiyt6",
   render_errors: [accepts: ~w(html json)],
-  pubsub: [name: Jukebox.PubSub,
+  pubsub: [name: Juicebox.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger

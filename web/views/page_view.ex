@@ -1,3 +1,3 @@
-defmodule Jukebox.PageView do
-  use Jukebox.Web, :view
+defmodule Juicebox.PageView do
+  use Juicebox.Web, :view
 end

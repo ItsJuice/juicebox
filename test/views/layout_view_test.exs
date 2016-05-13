@@ -1,3 +1,3 @@
-defmodule Jukebox.LayoutViewTest do
-  use Jukebox.ConnCase, async: true
+defmodule Juicebox.LayoutViewTest do
+  use Juicebox.ConnCase, async: true
 end

@@ -1,4 +1,4 @@
-defmodule Jukebox.ConnCase do
+defmodule Juicebox.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -20,23 +20,22 @@ defmodule Jukebox.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
 
-      alias Jukebox.Repo
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query, only: [from: 1, from: 2]
+      alias Juicebox.Repo
+      import Ecto.Model
+      import Ecto.Query, only: [from: 2]
 
-      import Jukebox.Router.Helpers
+      import Juicebox.Router.Helpers
 
       # The default endpoint for testing
-      @endpoint Jukebox.Endpoint
+      @endpoint Juicebox.Endpoint
     end
   end
 
   setup tags do
     unless tags[:async] do
-      Ecto.Adapters.SQL.restart_test_transaction(Jukebox.Repo, [])
+      Ecto.Adapters.SQL.restart_test_transaction(Juicebox.Repo, [])
     end
 
-    {:ok, conn: Phoenix.ConnTest.conn()}
+    :ok
   end
 end

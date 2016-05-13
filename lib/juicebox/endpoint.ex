@@ -1,14 +1,14 @@
-defmodule Jukebox.Endpoint do
-  use Phoenix.Endpoint, otp_app: :jukebox
+defmodule Juicebox.Endpoint do
+  use Phoenix.Endpoint, otp_app: :juicebox
 
-  socket "/socket", Jukebox.UserSocket
+  socket "/socket", Juicebox.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
   plug Plug.Static,
-    at: "/", from: :jukebox, gzip: false,
+    at: "/", from: :juicebox, gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
@@ -32,8 +32,8 @@ defmodule Jukebox.Endpoint do
 
   plug Plug.Session,
     store: :cookie,
-    key: "_jukebox_key",
-    signing_salt: "YOvSUyXE"
+    key: "_juicebox_key",
+    signing_salt: "QPYfeVPQ"
 
-  plug Jukebox.Router
+  plug Juicebox.Router
 end

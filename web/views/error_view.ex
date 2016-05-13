@@ -1,5 +1,5 @@
-defmodule Jukebox.ErrorView do
-  use Jukebox.Web, :view
+defmodule Juicebox.ErrorView do
+  use Juicebox.Web, :view
 
   def render("404.html", _assigns) do
     "Page not found"
