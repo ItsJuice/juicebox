@@ -1,7 +1,7 @@
 {
   "name": "juicebox",
   "version": "0.0.1",
-  "devDependencies": {
+  "dependencies": {
     "babel-core": "~6.1.2",
     "babel-loader": "~6.1.0",
     "babel-plugin-transform-object-assign": "^6.0.14",
@@ -16,12 +16,17 @@
     "sass-loader": "^3.1.1",
     "style-loader": "~0.13.0",
     "url-loader": "^0.5.7",
-    "webpack": "~1.12.3"
-  },
-  "dependencies": {
+    "webpack": "~1.12.3",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-redux": "^4.0.0",
     "redux": "^3.0.4"
+  },
+  "engines": {
+    "node": "5.10.0",
+    "npm": "3.8.3"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/.bin/webpack -p"
   }
 }

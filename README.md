@@ -1,6 +1,6 @@
-# Jukebox
+# Juicebox
 
-Obviously you will first need Elixir:
+First install Elixir:
 
 ```bash
 brew update
@@ -18,6 +18,14 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
 
+## deploy to heroku
+The only setup is that you need to install two buildpacks:
+
+```bash
+heroku buildpacks:add heroku/nodejs
+heroku buildpacks:add heroku/heroku-buildpack-elixir
+```
+
 ## Learn more
 
   * Official website: http://www.phoenixframework.org/
@@ -25,3 +33,4 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Docs: http://hexdocs.pm/phoenix
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
+
