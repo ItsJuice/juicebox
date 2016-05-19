@@ -4,7 +4,11 @@ defmodule Juicebox.ApiController do
   import Juicebox.Youtube
 
   def videos(conn, params) do
-    videos = Juicebox.Youtube.search(params["q"])
-    render conn, videos: videos
+    case Juicebox.Youtube.search(params["q"]) do
+      {:ok, videos} ->
+        render(conn, videos: videos)
+      {:error, _} ->
+        json(conn, %{error: "Unable to fetch results"})
+    end
   end
 end

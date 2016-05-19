@@ -14,8 +14,8 @@ defmodule Juicebox.Youtube do
 
   def search(query) do
     with {:ok, body} <- make_request(query, config(:api_key)),
-         parsed      <- parse_response(body),
-         do: format_response(parsed)
+         parsed = parse_response(body),
+         do: {:ok, format_response(parsed)}
   end
 
   defp make_request(query, key) do
