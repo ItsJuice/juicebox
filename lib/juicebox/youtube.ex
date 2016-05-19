@@ -1,27 +1,30 @@
 defmodule Juicebox.Youtube do
-  import HTTPotion
+  import HTTPoison
+
+  @youtube_api_url "https://www.googleapis.com/youtube/v3/search"
+
+  @youtube_params %{
+    part: "snippet",
+    safeSearch: "strict",
+    type: "video",
+    videoCategoryId: "10", # music
+    order: "viewCount",
+    videoEmbeddable: "true"
+  }
 
   def search(query) do
-    make_request(query, config[:api_key])
-      |> parse_response
-      |> format_response
-  end
-
-  defp config do
-    Application.get_env :juicebox, Juicebox.Youtube
+    with {:ok, body} <- make_request(query, config(:api_key)),
+         parsed      <- parse_response(body),
+         do: format_response(parsed)
   end
 
   defp make_request(query, key) do
-    HTTPotion.get("https://www.googleapis.com/youtube/v3/search", [ query: %{
+    params = Map.merge(@youtube_params, %{
       q: query,
-      key: key,
-      part: "snippet",
-      safeSearch: "strict",
-      type: "video",
-      videoCategoryId: "10", # music
-      order: "viewCount",
-      videoEmbeddable: "true"
-    } ])
+      key: key
+    })
+
+    HTTPoison.get(@youtube_api_url, [], params: params)
   end
 
   defp parse_response(resp) do
@@ -29,7 +32,7 @@ defmodule Juicebox.Youtube do
   end
 
   defp format_response(resp) do
-    Enum.map(resp["items"], &format_video(&1))
+    Enum.map(resp["items"], &format_video/1)
   end
 
   defp format_video(video) do
@@ -55,4 +58,9 @@ defmodule Juicebox.Youtube do
        thumbnail: thumbnail
      }
   end
+
+  defp config(key) do
+    Application.get_env(:juicebox, Juicebox.Youtube)[key]
+  end
+
 end
