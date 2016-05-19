@@ -19,7 +19,7 @@ defmodule Juicebox.Mixfile do
   def application do
     [mod: {Juicebox, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :httpotion]]
   end
 
   # Specifies which paths to compile per environment.
