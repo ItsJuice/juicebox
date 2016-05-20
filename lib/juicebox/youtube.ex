@@ -15,7 +15,7 @@ defmodule Juicebox.Youtube do
   def search(query) do
     with {:ok, body} <- make_request(query, config(:api_key)),
          parsed = parse_response(body),
-         do: {:ok, format_response(parsed)}
+         do: format_response(parsed)
   end
 
   defp make_request(query, key) do
@@ -31,8 +31,12 @@ defmodule Juicebox.Youtube do
     Poison.Parser.parse!(resp.body)
   end
 
-  defp format_response(resp) do
-    Enum.map(resp["items"], &format_video/1)
+  defp format_response(%{"items" => items} = resp) do
+    {:ok, Enum.map(items, &format_video/1)}
+  end
+
+  defp format_response(%{"error" => error}) do
+    {:error, error}
   end
 
   defp format_video(video) do
