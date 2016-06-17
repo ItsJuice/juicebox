@@ -1,8 +1,9 @@
 defmodule Juicebox.Youtube.InMemory do
   @behaviour Juicebox.Youtube
+  alias Juicebox.Youtube.Video, as: Video
 
-  def search(query) do
-    videos = [%{
+  def search(_) do
+    videos = [%Video{
       video_id: 1,
       title: "Movie Bloopers",
       description: "Some funny movie bloopers",

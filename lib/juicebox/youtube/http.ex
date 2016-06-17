@@ -1,5 +1,6 @@
 defmodule Juicebox.Youtube.HTTP do
   @behaviour Juicebox.Youtube
+  alias Juicebox.Youtube.Video, as: Video
 
   import HTTPoison
 
@@ -33,7 +34,7 @@ defmodule Juicebox.Youtube.HTTP do
     Poison.Parser.parse!(resp.body)
   end
 
-  defp format_response(%{"items" => items} = resp) do
+  defp format_response(%{"items" => items}) do
     {:ok, Enum.map(items, &format_video/1)}
   end
 
@@ -57,7 +58,7 @@ defmodule Juicebox.Youtube.HTTP do
       }
     } = video
 
-    %{
+    %Video{
        video_id: video_id,
        title: title,
        description: description,
