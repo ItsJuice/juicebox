@@ -1,12 +1,10 @@
-defmodule Juicebox.UserSocket do
+defmodule Juicebox.StreamSocket do
   use Phoenix.Socket
 
-  ## Channels
-  # channel "rooms:*", Juicebox.RoomChannel
+  channel "stream:*", Juicebox.StreamChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
-  # transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

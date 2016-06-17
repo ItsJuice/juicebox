@@ -20,6 +20,7 @@ defmodule Juicebox.ModelCase do
       import Ecto.Model
       import Ecto.Query, only: [from: 2]
       import Juicebox.ModelCase
+      import Juicebox.Factory
     end
   end
 

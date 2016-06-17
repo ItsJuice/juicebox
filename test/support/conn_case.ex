@@ -25,6 +25,7 @@ defmodule Juicebox.ConnCase do
       import Ecto.Query, only: [from: 2]
 
       import Juicebox.Router.Helpers
+      import Juicebox.Factory
 
       # The default endpoint for testing
       @endpoint Juicebox.Endpoint

@@ -30,12 +30,17 @@ defmodule Juicebox.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.0.3"},
-     {:phoenix_ecto, "~> 1.1"},
-     {:postgrex, ">= 0.0.0"},
-     {:phoenix_html, "~> 2.1"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:cowboy, "~> 1.0"}]
+    [
+      {:phoenix, "~> 1.0.3"},
+      {:phoenix_ecto, "~> 1.1"},
+      {:postgrex, ">= 0.0.0"},
+      {:phoenix_html, "~> 2.1"},
+      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:cowboy, "~> 1.0"},
+      {:ex_machina, "~> 0.6.1", only: :test},
+      {:hound, "~> 1.0", only: :test},
+      {:junit_formatter, "~> 0.1", only: :test}
+    ]
   end
 
   # Aliases are shortcut or tasks specific to the current project.
