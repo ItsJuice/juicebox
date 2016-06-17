@@ -42,5 +42,7 @@ config :juicebox, Juicebox.Repo,
   hostname: "localhost",
   pool_size: 10
 
+config :juicebox, :youtube_api, Juicebox.Youtube.HTTP
+
 config :juicebox, Juicebox.Youtube,
   api_key: ""
