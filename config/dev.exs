@@ -45,4 +45,4 @@ config :juicebox, Juicebox.Repo,
 config :juicebox, :youtube_api, Juicebox.Youtube.HTTP
 
 config :juicebox, Juicebox.Youtube,
-  api_key: ""
+  api_key: System.get_env("YOUTUBE_API_KEY")
