@@ -8,8 +8,10 @@ defmodule Juicebox.ApiController do
     case @youtube_api.search(params["q"]) do
       {:ok, videos} ->
         render(conn, videos: videos)
-      {:error, _} ->
-        json(conn, %{error: "Unable to fetch results"})
+      _ ->
+        conn
+        |> put_status(500)
+        |> json(%{error: "Unable to fetch results"})
     end
   end
 end
