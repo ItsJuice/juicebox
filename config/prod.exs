@@ -64,3 +64,6 @@ config :juicebox, Juicebox.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
   size: 20 # The amount of database connections in the pool
+
+config :juicebox, Juicebox.Youtube,
+  api_key: System.get_env("YOUTUBE_API_KEY")
