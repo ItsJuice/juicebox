@@ -7,7 +7,7 @@ export default class SearchBar extends Component {
   }
 
   onInputChange(event) {
-    setState({ term: event.target.value });
+    this.setState({ term: event.target.value });
   }
 
   render() {
@@ -17,7 +17,7 @@ export default class SearchBar extends Component {
           placeholder='Search'
           className='form-control'
           value={this.state.term}
-          onChange={this.onInputChange} />
+          onChange={this.onInputChange.bind(this)} />
         <span className='input-group-btn'>
           <button type='submit' className='btn btn-secondary'>Submit</button>
         </span>

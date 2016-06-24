@@ -1,3 +1,4 @@
+import 'react-bootstrap';
 import './app.scss';
 
 import React, { Component } from 'react';
