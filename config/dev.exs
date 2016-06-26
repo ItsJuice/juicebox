@@ -42,7 +42,16 @@ config :juicebox, Juicebox.Repo,
   hostname: "localhost",
   pool_size: 10
 
-config :juicebox, :youtube_api, Juicebox.Youtube.HTTP
+config :juicebox, :youtube_api, Juicebox.Youtube.API
 
 config :juicebox, Juicebox.Youtube,
-  api_key: System.get_env("YOUTUBE_API_KEY")
+  api_key: System.get_env("YOUTUBE_API_KEY"),
+  api_url: "https://www.googleapis.com/youtube/v3/search",
+  search_params: %{
+    part: "snippet",
+    safeSearch: "strict",
+    type: "video",
+    videoCategoryId: "10", # music
+    order: "viewCount",
+    videoEmbeddable: "true"
+  }
