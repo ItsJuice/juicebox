@@ -65,5 +65,16 @@ config :juicebox, Juicebox.Repo,
   url: System.get_env("DATABASE_URL"),
   size: 20 # The amount of database connections in the pool
 
+config :juicebox, :youtube_api, Juicebox.Youtube.API
+
 config :juicebox, Juicebox.Youtube,
-  api_key: System.get_env("YOUTUBE_API_KEY")
+  api_key: System.get_env("YOUTUBE_API_KEY"),
+  api_url: "https://www.googleapis.com/youtube/v3/search",
+  search_params: %{
+    part: "snippet",
+    safeSearch: "strict",
+    type: "video",
+    videoCategoryId: "10", # music
+    order: "viewCount",
+    videoEmbeddable: "true"
+  }

@@ -3,7 +3,7 @@ defmodule Juicebox.ApiControllerTest do
 
   test "GET /api/videos?q=good" do
     response = get conn(), "/api/videos?q=good"
-    assert [_] = json_response(response, 200)
+    assert [%{}] = json_response(response, 200)
   end
 
   test "GET /api/videos?q=bad" do
