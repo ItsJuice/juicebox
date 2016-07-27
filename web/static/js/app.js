@@ -19,13 +19,17 @@ function sampleVideo() {
   return VIDEO_SAMPLES[Math.floor(Math.random() * VIDEO_SAMPLES.length)];
 }
 
+function onVideoAdded() {
+  this.channel.push("video.added", { video_id: sampleVideo() });
+}
+
 class App extends Component {
   constructor() {
     super();
 
     this.state = {
       videos: []
-    }
+    };
   }
 
   componentWillMount() {
@@ -38,14 +42,8 @@ class App extends Component {
       let videos = JSON.parse(JSON.stringify(this.state.videos));
       videos.push(payload);
 
-      this.setState({
-        videos: videos
-      });
+      this.setState({ videos });
     })
-  }
-
-  _onVideoAdded() {
-    this.channel.push("video.added", { video_id: sampleVideo() });
   }
 
   render() {
@@ -53,11 +51,11 @@ class App extends Component {
 
     return (
       <div className="app">
-        <a href="#add-video" onClick={this._onVideoAdded.bind(this)}>Add video</a>
-
+        <a href="#add-video" onClick={onVideoAdded.bind(this)}>Add video</a>
         <VideoList videos={videos} />
       </div>
     );
   }
 }
+
 export default App;
