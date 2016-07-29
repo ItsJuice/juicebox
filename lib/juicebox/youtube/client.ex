@@ -27,6 +27,7 @@ defmodule Juicebox.Youtube.Client do
       "snippet" => %{
         "title" => title,
         "description" => description,
+        "duration" => duration,
         "thumbnails" => %{
           "high" => %{
             "url" => thumbnail
@@ -39,6 +40,7 @@ defmodule Juicebox.Youtube.Client do
        video_id: video_id,
        title: title,
        description: description,
+       duration: duration,
        thumbnail: thumbnail
      }
   end

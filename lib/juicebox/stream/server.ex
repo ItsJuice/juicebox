@@ -1,0 +1,99 @@
+defmodule Juicebox.Stream.Server do
+  alias Juicebox.Youtube.Video
+  use GenServer
+
+  def start_link(stream_id) do
+    GenServer.start_link(__MODULE__, %{}, name: via_tuple(stream_id))
+  end
+
+  def init(queue) do
+    {:ok, %{playing: nil, timer: nil, queue: []}}
+  end
+
+  def skip(stream_id) do
+    GenServer.call(via_tuple(stream_id), :skip)
+  end
+
+  def add(stream_id, video) do
+    {:ok, state} = GenServer.call(via_tuple(stream_id), {:add, video})
+
+    # auto-play if nothing was playing
+    start(stream_id)
+  end
+
+  def remaining_time(stream_id) do
+    GenServer.call(via_tuple(stream_id), :remaining_time)
+  end
+
+  def playing(stream_id) do
+    GenServer.call(via_tuple(stream_id), :playing)
+  end
+
+  defp start(stream_id) do
+    GenServer.call(via_tuple(stream_id), :start)
+  end
+
+  ####
+
+  def handle_call(:start, _from, %{playing: nil} = state) do
+    new_state = play_next(state)
+    {:reply, {:ok, new_state}, new_state}
+  end
+
+  def handle_call(:start, _from, %{playing: _} = state), do: {:reply, {:ok, state}, state}
+
+  def handle_call(:remaining_time, _from, state) do
+    {:reply, {:ok, Process.read_timer(state.timer)}, state}
+  end
+
+  def handle_call(:playing, _from, state) do
+    {:reply, {:ok, state.playing}, state}
+  end
+
+  def handle_call(:skip, _from, state) do
+    new_state = play_next(state)
+    {:reply, {:ok, new_state}, new_state}
+  end
+
+  def handle_call({:add, video}, _from, %{queue: queue} = state) do
+    new_queue = queue ++ [video]
+    new_state = %{state | queue: new_queue}
+    {:reply, {:ok, new_state}, new_state}
+  end
+
+  def handle_info(:next, state) do
+    {:noreply, play_next(state)}
+  end
+
+  def get_next(%{queue: [video | queue]} = state) do
+    {:ok, video, %{state | queue: queue}}
+  end
+
+  def get_next(%{queue: []} = state) do
+    {:error, "Queue is empty"}
+  end
+
+  defp play_next(state) do
+    clear_timer(state)
+
+    case get_next(state) do
+      {:ok, video, new_state} ->
+        timer = Process.send_after(self(), :next, video.duration)
+        %{new_state | playing: video,
+                      timer: timer}
+      {:error, error} ->
+        %{state | playing: nil,
+                  timer: nil}
+    end
+  end
+
+  defp clear_timer(%{timer: nil}), do: nil
+
+  defp clear_timer(%{timer: timer}) do
+    Process.cancel_timer(timer)
+  end
+
+  defp via_tuple(stream_id) do
+    {:via, :gproc, {:n, :l, {:stream, stream_id}}}
+  end
+end

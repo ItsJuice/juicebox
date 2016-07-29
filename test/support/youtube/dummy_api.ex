@@ -13,6 +13,7 @@ defmodule Juicebox.Youtube.DummyAPI do
           "snippet" => %{
             "title" => "Dummy",
             "description" => "Video",
+            "duration" => 5000,
             "thumbnails" => %{
               "high" => %{
                 "url" => "test.jpg"

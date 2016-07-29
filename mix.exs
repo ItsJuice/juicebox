@@ -19,7 +19,7 @@ defmodule Juicebox.Mixfile do
   def application do
     [mod: {Juicebox, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :postgrex, :httpoison,
+                    :phoenix_ecto, :postgrex, :httpoison, :gproc,
                     :phoenix_pubsub, :gettext]]
   end
 
@@ -43,8 +43,8 @@ defmodule Juicebox.Mixfile do
       {:hound, "~> 1.0", only: :test},
       {:junit_formatter, "~> 0.1", only: :test},
       {:httpoison, "~> 0.8.0"},
-      {:gproc, "~> 0.5.0"},
-      {:gettext, "~> 0.9"}
+      {:gettext, "~> 0.9"},
+      {:gproc, "~> 0.5.0"}
     ]
   end
 

@@ -11,6 +11,7 @@ defmodule Juicebox do
       supervisor(Juicebox.Endpoint, []),
       # Start the Ecto repository
       worker(Juicebox.Repo, []),
+      worker(Juicebox.Stream.Supervisor, []),
       # Here you could define other workers and supervisors as children
       # worker(Juicebox.Worker, [arg1, arg2, arg3]),
     ]
