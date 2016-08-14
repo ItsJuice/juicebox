@@ -1,4 +1,6 @@
-  # Juicebox
+# Juicebox
+
+[![Build Status](https://travis-ci.org/ItsJuice/juicebox.svg?branch=master)](https://travis-ci.org/ItsJuice/juicebox)
 
 First install Elixir:
 

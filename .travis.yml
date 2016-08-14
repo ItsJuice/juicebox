@@ -1,9 +1,15 @@
 language: elixir
 elixir:
   - 1.2.4
-
 env:
-  - WEBDRIVER=phantomjs
-
+  global:
+    - WEBDRIVER=phantomjs
+before_install:
+  - nvm install 6.3.1
+  - npm install -g npm
 before_script:
+  - npm install
   - bash $TRAVIS_BUILD_DIR/test/tools/start_webdriver.sh
+script:
+  - mix test
+  - npm test

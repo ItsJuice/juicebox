@@ -1,8 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './app.js';
+import { render } from 'react-dom';
+import Root from './containers/root';
+import configureStore from './stores/main-store'
 
-const rootElement = document.createElement('div');
-document.body.appendChild(rootElement);
+const initialState = {
+  videos: []
+};
 
-ReactDOM.render(<App />, rootElement);
+const appInit = () => {
+  const store = configureStore({});
+
+  const rootElement = document.createElement('div');
+  document.body.appendChild(rootElement);
+  
+  render(<Root store={store} />, rootElement);
+};
+
+document.addEventListener('DOMContentLoaded', appInit, false);

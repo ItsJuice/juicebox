@@ -17,10 +17,7 @@ module.exports = {
       //test: path.join(__dirname, "web", "static", "js"),
       test: /\.jsx?$/i,
       exclude: path.join(__dirname, 'node_modules'),
-      loader: 'babel',
-      query: {
-        presets: ['es2015', 'react'],
-      },
+      loader: 'babel'
     }, {
       test: /\.scss$/,
       loaders: ["style", "css", "sass"]
