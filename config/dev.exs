@@ -13,7 +13,9 @@ config :juicebox, Juicebox.Endpoint,
   cache_static_lookup: false,
   check_origin: false,
   watchers: [node: ["node_modules/webpack/bin/webpack.js",
-            "--watch-stdin", "--progress", "--colors"]]
+            "--watch-stdin", "--progress", "--colors",
+            cd: Path.expand("../", __DIR__)]]
+
 
 # Watch static and templates for browser reloading.
 config :juicebox, Juicebox.Endpoint,

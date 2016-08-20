@@ -2,8 +2,8 @@ defmodule Juicebox.VideoTests do
   use Juicebox.ModelCase, async: true
 
   test "increment_queued_count_changeset increments the video queued count by 1" do
-    subject = 
-      create(:video, %{queued_count: 2})
+    subject =
+      insert(:video, %{queued_count: 2})
       |> Juicebox.Video.increment_queued_count_changeset
       |> Juicebox.Repo.update
 
