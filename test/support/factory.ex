@@ -2,7 +2,7 @@ defmodule Juicebox.Factory do
   # with Ecto
   use ExMachina.Ecto, repo: Juicebox.Repo
 
-  def factory(:video) do
+  def video_factory do
     %Juicebox.Video {
       queued_count: 0
     }
