@@ -1,4 +1,8 @@
 defmodule Juicebox.Stream.Server do
+  @moduledoc """
+  Provides playlist-like behaviour for a queue of videos
+  """
+
   alias Juicebox.Youtube.Video
   use GenServer
 
@@ -10,10 +14,17 @@ defmodule Juicebox.Stream.Server do
     {:ok, %{playing: nil, timer: nil, queue: []}}
   end
 
+  @doc """
+  Skips the currently playing video. Playback will stop if the queue is empty.
+  """
   def skip(stream_id) do
     GenServer.call(via_tuple(stream_id), :skip)
   end
 
+  @doc """
+  Plays the video if one is not already playing, otherwise adds it to the
+  queue.
+  """
   def add(stream_id, video) do
     {:ok, state} = GenServer.call(via_tuple(stream_id), {:add, video})
 
@@ -21,10 +32,16 @@ defmodule Juicebox.Stream.Server do
     start(stream_id)
   end
 
+  @doc """
+  Returns (in ms) the playback time remaining for the current video
+  """
   def remaining_time(stream_id) do
     GenServer.call(via_tuple(stream_id), :remaining_time)
   end
 
+  @doc """
+  Returns the currently playing video (%Juicebox.Youtube.Video{})
+  """
   def playing(stream_id) do
     GenServer.call(via_tuple(stream_id), :playing)
   end

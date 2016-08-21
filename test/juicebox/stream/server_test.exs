@@ -43,8 +43,6 @@ defmodule Juicebox.Stream.ServerTests do
     end
   end
 
-
-
   describe ".skip" do
     test "skips to the next item in the queue", ctx do
       Stream.add(@stream, ctx.video)
