@@ -1,56 +1,61 @@
 defmodule Juicebox.Stream.Server do
   @moduledoc """
-  Provides playlist-like behaviour for a queue of videos
+  Provides playlist-like behaviour for a queue of tracks
   """
-
-  alias Juicebox.Youtube.Video
   use GenServer
 
   def start_link(stream_id) do
     GenServer.start_link(__MODULE__, %{}, name: via_tuple(stream_id))
   end
 
-  def init(queue) do
+  def init(_) do
     {:ok, %{playing: nil, timer: nil, queue: []}}
   end
 
   @doc """
-  Skips the currently playing video. Playback will stop if the queue is empty.
+  Skips the currently playing track. Playback will stop if the queue is empty.
   """
   def skip(stream_id) do
     GenServer.call(via_tuple(stream_id), :skip)
   end
 
   @doc """
-  Plays the video if one is not already playing, otherwise adds it to the
+  Plays the track if one is not already playing, otherwise adds it to the
   queue.
   """
-  def add(stream_id, video) do
-    {:ok, state} = GenServer.call(via_tuple(stream_id), {:add, video})
+  def add(stream_id, track) do
+    {:ok, _} = GenServer.call(via_tuple(stream_id), {:add, track})
 
     # auto-play if nothing was playing
     start(stream_id)
   end
 
   @doc """
-  Returns (in ms) the playback time remaining for the current video
+  Returns (in ms) the playback time remaining for the current track
   """
   def remaining_time(stream_id) do
     GenServer.call(via_tuple(stream_id), :remaining_time)
   end
 
   @doc """
-  Returns the currently playing video (%Juicebox.Youtube.Video{})
+  Returns the currently playing track (%Juicebox.Stream.Track{})
   """
   def playing(stream_id) do
     GenServer.call(via_tuple(stream_id), :playing)
   end
 
   @doc """
-  Returns a list of videos currently in the queue
+  Returns a list of tracks currently in the queue
   """
   def queue(stream_id) do
     GenServer.call(via_tuple(stream_id), :get_queue)
+  end
+
+  @doc """
+  Adds a vote to a given %Track{}
+  """
+  def vote(stream_id, track_id) do
+    GenServer.call(via_tuple(stream_id), {:vote, track_id})
   end
 
   defp start(stream_id) do
@@ -79,23 +84,35 @@ defmodule Juicebox.Stream.Server do
     {:reply, {:ok, new_state}, new_state}
   end
 
-  def handle_call({:add, video}, _from, %{queue: queue} = state) do
-    new_queue = queue ++ [video]
+  def handle_call({:add, track}, _from, %{queue: queue} = state) do
+    new_queue = queue ++ [track]
     new_state = %{state | queue: new_queue}
     {:reply, {:ok, new_state}, new_state}
   end
 
   def handle_call(:get_queue, _from, %{queue: queue} = state), do: {:reply, {:ok, queue}, state}
 
+  def handle_call({:vote, track_id}, _from, %{queue: queue} = state) do
+    track_index = Enum.find_index(queue, fn(x) -> x.track_id == track_id end)
+
+    track = Enum.at(queue, track_index)
+            |> Map.update!(:votes, &(&1 + 1))
+
+    new_queue = List.update_at(queue, track_index, fn(_) -> track end)
+                |> Enum.sort(&(&1.votes > &2.votes))
+
+    {:reply, {:ok, track}, %{state | queue: new_queue}}
+  end
+
   def handle_info(:next, state) do
     {:noreply, play_next(state)}
   end
 
-  def get_next(%{queue: [video | queue]} = state) do
-    {:ok, video, %{state | queue: queue}}
+  def get_next(%{queue: [track | queue]} = state) do
+    {:ok, track, %{state | queue: queue}}
   end
 
-  def get_next(%{queue: []} = state) do
+  def get_next(%{queue: []}) do
     {:error, "Queue is empty"}
   end
 
@@ -103,11 +120,11 @@ defmodule Juicebox.Stream.Server do
     clear_timer(state)
 
     case get_next(state) do
-      {:ok, video, new_state} ->
-        timer = Process.send_after(self(), :next, video.duration)
-        %{new_state | playing: video,
+      {:ok, track, new_state} ->
+        timer = Process.send_after(self(), :next, track.video.duration)
+        %{new_state | playing: track,
                       timer: timer}
-      {:error, error} ->
+      {:error, _} ->
         %{state | playing: nil,
                   timer: nil}
     end
