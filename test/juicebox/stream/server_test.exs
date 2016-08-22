@@ -78,6 +78,16 @@ defmodule Juicebox.Stream.ServerTests do
     end
   end
 
+  describe ".queue" do
+    test "returns the videos in the queue", ctx do
+      Stream.add(@stream, ctx.video)
+      Stream.add(@stream, ctx.video_1)
+      Stream.add(@stream, ctx.video_2)
+
+      assert Stream.queue(@stream) == {:ok, [ctx.video_1, ctx.video_2]}
+    end
+  end
+
   describe "auto-play" do
     test "automatically plays videos until the queue is empty", ctx do
       Stream.add(@stream, ctx.video)

@@ -46,6 +46,13 @@ defmodule Juicebox.Stream.Server do
     GenServer.call(via_tuple(stream_id), :playing)
   end
 
+  @doc """
+  Returns a list of videos currently in the queue
+  """
+  def queue(stream_id) do
+    GenServer.call(via_tuple(stream_id), :get_queue)
+  end
+
   defp start(stream_id) do
     GenServer.call(via_tuple(stream_id), :start)
   end
@@ -77,6 +84,8 @@ defmodule Juicebox.Stream.Server do
     new_state = %{state | queue: new_queue}
     {:reply, {:ok, new_state}, new_state}
   end
+
+  def handle_call(:get_queue, _from, %{queue: queue} = state), do: {:reply, {:ok, queue}, state}
 
   def handle_info(:next, state) do
     {:noreply, play_next(state)}
