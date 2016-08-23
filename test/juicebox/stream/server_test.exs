@@ -84,6 +84,10 @@ defmodule Juicebox.Stream.ServerTests do
       {:ok, time} = Stream.remaining_time(@stream)
       assert time <= 10
     end
+
+    test "returns an error if nothing is playing" do
+      assert {:error, _} = Stream.remaining_time(@stream)
+    end
   end
 
   describe ".queue" do

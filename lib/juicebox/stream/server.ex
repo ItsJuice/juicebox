@@ -78,7 +78,7 @@ defmodule Juicebox.Stream.Server do
   end
 
   def handle_call(:remaining_time, _from, state) do
-    {:reply, {:ok, Process.read_timer(state.timer)}, state}
+    {:reply, Control.remaining_time(state), state}
   end
 
   def handle_call(:playing, _from, state) do

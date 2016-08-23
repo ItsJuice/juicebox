@@ -65,4 +65,10 @@ defmodule Juicebox.Stream.Control do
 
     %{state | queue: new_queue}
   end
+
+  def remaining_time(%{timer: nil}), do: {:error, "Not playing"}
+
+  def remaining_time(%{timer: timer}) do
+    {:ok, Process.read_timer(timer)}
+  end
 end
