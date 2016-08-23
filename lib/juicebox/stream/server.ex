@@ -9,7 +9,7 @@ defmodule Juicebox.Stream.Server do
   end
 
   def init(_) do
-    {:ok, %{playing: nil, timer: nil, queue: []}}
+    {:ok, %{playing: nil, timer: nil, queue: [], history: []}}
   end
 
   @doc """
@@ -58,6 +58,13 @@ defmodule Juicebox.Stream.Server do
     GenServer.call(via_tuple(stream_id), {:vote, track_id})
   end
 
+  @doc """
+  Returns a list of previously played tracks
+  """
+  def history(stream_id) do
+    GenServer.call(via_tuple(stream_id), :history)
+  end
+
   defp start(stream_id) do
     GenServer.call(via_tuple(stream_id), :start)
   end
@@ -104,37 +111,59 @@ defmodule Juicebox.Stream.Server do
     {:reply, {:ok, track}, %{state | queue: new_queue}}
   end
 
+  def handle_call(:history, _from, %{history: history} = state) do
+    {:reply, {:ok, history}, state}
+  end
+
   def handle_info(:next, state) do
     {:noreply, play_next(state)}
   end
 
-  def get_next(%{queue: [track | queue]} = state) do
-    {:ok, track, %{state | queue: queue}}
-  end
-
-  def get_next(%{queue: []}) do
-    {:error, "Queue is empty"}
-  end
-
   defp play_next(state) do
-    clear_timer(state)
-
-    case get_next(state) do
-      {:ok, track, new_state} ->
-        timer = Process.send_after(self(), :next, track.video.duration)
-        %{new_state | playing: track,
-                      timer: timer}
-      {:error, _} ->
-        %{state | playing: nil,
-                  timer: nil}
-    end
+    stop_track(state)
+    |> next_track
+    |> start_timer
   end
+
+
+  defp stop_track(%{playing: nil} = state), do: state
+
+  defp stop_track(%{history: history, playing: track} = state) do
+    %{state | playing: nil,
+              history: [track | history]}
+  end
+
+
+  defp next_track(%{queue: []} = state) do
+    %{state | playing: nil}
+  end
+
+  defp next_track(%{queue: [track | queue]} = state) do
+    %{state | queue: queue, playing: track}
+  end
+
+  defp start_timer(state) do
+    clear_timer(state)
+    create_timer(state)
+  end
+
+
+  defp create_timer(%{playing: nil} = state) do
+    %{state | timer: nil}
+  end
+
+  defp create_timer(%{playing: track} = state) do
+    timer = Process.send_after(self(), :next, track.video.duration)
+    %{state | timer: timer}
+  end
+
 
   defp clear_timer(%{timer: nil}), do: nil
 
   defp clear_timer(%{timer: timer}) do
     Process.cancel_timer(timer)
   end
+
 
   defp via_tuple(stream_id) do
     {:via, :gproc, {:n, :l, {:stream, stream_id}}}
