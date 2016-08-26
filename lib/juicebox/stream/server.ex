@@ -3,13 +3,14 @@ defmodule Juicebox.Stream.Server do
   Provides playlist-like behaviour for a queue of tracks
   """
   use GenServer
+  alias Juicebox.Stream.Control
 
   def start_link(stream_id) do
     GenServer.start_link(__MODULE__, %{}, name: via_tuple(stream_id))
   end
 
   def init(_) do
-    {:ok, %{playing: nil, timer: nil, queue: []}}
+    {:ok, %{playing: nil, timer: nil, queue: [], history: []}}
   end
 
   @doc """
@@ -55,7 +56,14 @@ defmodule Juicebox.Stream.Server do
   Adds a vote to a given %Track{}
   """
   def vote(stream_id, track_id) do
-    GenServer.call(via_tuple(stream_id), {:vote, track_id})
+    GenServer.cast(via_tuple(stream_id), {:vote, track_id})
+  end
+
+  @doc """
+  Returns a list of previously played tracks
+  """
+  def history(stream_id) do
+    GenServer.call(via_tuple(stream_id), :history)
   end
 
   defp start(stream_id) do
@@ -64,15 +72,13 @@ defmodule Juicebox.Stream.Server do
 
   ####
 
-  def handle_call(:start, _from, %{playing: nil} = state) do
-    new_state = play_next(state)
+  def handle_call(:start, _from, state) do
+    new_state = Control.start(state)
     {:reply, {:ok, new_state}, new_state}
   end
 
-  def handle_call(:start, _from, %{playing: _} = state), do: {:reply, {:ok, state}, state}
-
   def handle_call(:remaining_time, _from, state) do
-    {:reply, {:ok, Process.read_timer(state.timer)}, state}
+    {:reply, Control.remaining_time(state), state}
   end
 
   def handle_call(:playing, _from, state) do
@@ -80,60 +86,27 @@ defmodule Juicebox.Stream.Server do
   end
 
   def handle_call(:skip, _from, state) do
-    new_state = play_next(state)
+    new_state = Control.play_next(state)
     {:reply, {:ok, new_state}, new_state}
   end
 
-  def handle_call({:add, track}, _from, %{queue: queue} = state) do
-    new_queue = queue ++ [track]
-    new_state = %{state | queue: new_queue}
+  def handle_call({:add, track}, _from, state) do
+    new_state = Control.add_track(state, track)
     {:reply, {:ok, new_state}, new_state}
   end
 
   def handle_call(:get_queue, _from, %{queue: queue} = state), do: {:reply, {:ok, queue}, state}
 
-  def handle_call({:vote, track_id}, _from, %{queue: queue} = state) do
-    track_index = Enum.find_index(queue, fn(x) -> x.track_id == track_id end)
+  def handle_cast({:vote, track_id}, state) do
+    {:noreply, Control.vote(state, track_id)}
+  end
 
-    track = Enum.at(queue, track_index)
-            |> Map.update!(:votes, &(&1 + 1))
-
-    new_queue = List.update_at(queue, track_index, fn(_) -> track end)
-                |> Enum.sort(&(&1.votes > &2.votes))
-
-    {:reply, {:ok, track}, %{state | queue: new_queue}}
+  def handle_call(:history, _from, %{history: history} = state) do
+    {:reply, {:ok, history}, state}
   end
 
   def handle_info(:next, state) do
-    {:noreply, play_next(state)}
-  end
-
-  def get_next(%{queue: [track | queue]} = state) do
-    {:ok, track, %{state | queue: queue}}
-  end
-
-  def get_next(%{queue: []}) do
-    {:error, "Queue is empty"}
-  end
-
-  defp play_next(state) do
-    clear_timer(state)
-
-    case get_next(state) do
-      {:ok, track, new_state} ->
-        timer = Process.send_after(self(), :next, track.video.duration)
-        %{new_state | playing: track,
-                      timer: timer}
-      {:error, _} ->
-        %{state | playing: nil,
-                  timer: nil}
-    end
-  end
-
-  defp clear_timer(%{timer: nil}), do: nil
-
-  defp clear_timer(%{timer: timer}) do
-    Process.cancel_timer(timer)
+    {:noreply, Control.play_next(state)}
   end
 
   defp via_tuple(stream_id) do

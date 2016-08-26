@@ -9,7 +9,7 @@ defmodule Juicebox.Stream.ServerTests do
   defp create_track(track_id, attrs \\ %{}) do
     %Track{
       track_id: track_id,
-      video: Map.merge(%Video{title: "Video", duration: 100}, attrs)
+      video: Map.merge(%Video{title: "Video", duration: 30}, attrs)
     }
   end
 
@@ -18,9 +18,9 @@ defmodule Juicebox.Stream.ServerTests do
 
     [
       track: create_track(0),
-      track_1: create_track(1, %{title: "Video 1", duration: 100}),
-      track_2: create_track(2, %{title: "Video 2", duration: 100}),
-      track_3: create_track(3, %{title: "Video 3", duration: 100}),
+      track_1: create_track(1, %{title: "Video 1", duration: 30}),
+      track_2: create_track(2, %{title: "Video 2", duration: 30}),
+      track_3: create_track(3, %{title: "Video 3", duration: 30}),
       server: server
     ]
   end
@@ -78,11 +78,15 @@ defmodule Juicebox.Stream.ServerTests do
 
       :timer.sleep(10)
       {:ok, time} = Stream.remaining_time(@stream)
-      assert time <= 90
+      assert time <= 20
 
       :timer.sleep(10)
       {:ok, time} = Stream.remaining_time(@stream)
-      assert time <= 80
+      assert time <= 10
+    end
+
+    test "returns an error if nothing is playing" do
+      assert {:error, _} = Stream.remaining_time(@stream)
     end
   end
 
@@ -143,6 +147,22 @@ defmodule Juicebox.Stream.ServerTests do
     end
   end
 
+  describe ".history" do
+    test "returns all previously played tracks", ctx do
+      Stream.add(@stream, ctx.track)
+      Stream.add(@stream, ctx.track_1)
+      Stream.add(@stream, ctx.track_2)
+
+      assert Stream.history(@stream) == {:ok, []}
+      Stream.skip(@stream)
+      assert Stream.history(@stream) == {:ok, [ctx.track]}
+      :timer.sleep(35)
+      assert Stream.history(@stream) == {:ok, [ctx.track_1, ctx.track]}
+      Stream.skip(@stream)
+      assert Stream.history(@stream) == {:ok, [ctx.track_2, ctx.track_1, ctx.track]}
+    end
+  end
+
   describe "auto-play" do
     test "automatically plays tracks until the queue is empty", ctx do
       Stream.add(@stream, ctx.track)
@@ -151,13 +171,13 @@ defmodule Juicebox.Stream.ServerTests do
 
       assert Stream.playing(@stream) == {:ok, ctx.track}
 
-      :timer.sleep(105)
+      :timer.sleep(35)
       assert Stream.playing(@stream) == {:ok, ctx.track_1}
 
-      :timer.sleep(105)
+      :timer.sleep(35)
       assert Stream.playing(@stream) == {:ok, ctx.track_2}
 
-      :timer.sleep(105)
+      :timer.sleep(35)
       assert Stream.playing(@stream) == {:ok, nil}
     end
 
@@ -165,13 +185,13 @@ defmodule Juicebox.Stream.ServerTests do
       Stream.add(@stream, ctx.track)
       assert Stream.playing(@stream) == {:ok, ctx.track}
 
-      :timer.sleep(105)
+      :timer.sleep(35)
       assert Stream.playing(@stream) == {:ok, nil}
 
       Stream.add(@stream, ctx.track_1)
       assert Stream.playing(@stream) == {:ok, ctx.track_1}
 
-      :timer.sleep(105)
+      :timer.sleep(35)
       assert Stream.playing(@stream) == {:ok, nil}
     end
 
@@ -186,13 +206,13 @@ defmodule Juicebox.Stream.ServerTests do
       Stream.vote(@stream, 2)
       Stream.vote(@stream, 1)
 
-      :timer.sleep(105)
+      :timer.sleep(35)
       assert Stream.playing(@stream) == {:ok, %{ctx.track_2 | votes: 2}}
 
-      :timer.sleep(105)
+      :timer.sleep(35)
       assert Stream.playing(@stream) == {:ok, %{ctx.track_1 | votes: 1}}
 
-      :timer.sleep(105)
+      :timer.sleep(35)
       assert Stream.playing(@stream) == {:ok, nil}
     end
   end
