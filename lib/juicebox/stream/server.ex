@@ -97,12 +97,12 @@ defmodule Juicebox.Stream.Server do
 
   def handle_call(:get_queue, _from, %{queue: queue} = state), do: {:reply, {:ok, queue}, state}
 
-  def handle_cast({:vote, track_id}, state) do
-    {:noreply, Control.vote(state, track_id)}
-  end
-
   def handle_call(:history, _from, %{history: history} = state) do
     {:reply, {:ok, history}, state}
+  end
+
+  def handle_cast({:vote, track_id}, state) do
+    {:noreply, Control.vote(state, track_id)}
   end
 
   def handle_info(:next, state) do
