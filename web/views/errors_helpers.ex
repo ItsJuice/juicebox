@@ -9,7 +9,6 @@ defmodule Juicebox.ErrorHelpers do
   """
   def error_tag(form, field) do
     if error = form.errors[field] do
-      content_tag :span, translate_error(error), class: "help-block"
     end
   end
 
@@ -28,9 +27,6 @@ defmodule Juicebox.ErrorHelpers do
      #     dgettext "errors", "is invalid"
      #
      if count = opts[:count] do
-       Gettext.dngettext(Juicebox.Gettext, "errors", msg, msg, count, opts)
-     else
-       Gettext.dgettext(Juicebox.Gettext, "errors", msg, opts)
      end
    end
 end

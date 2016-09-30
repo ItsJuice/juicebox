@@ -16,7 +16,6 @@ defmodule Juicebox.Youtube.Client do
   end
 
   defp format_response(%{"error" => error}) do
-    {:error, error}
   end
 
   defp format_video(video) do
@@ -37,11 +36,6 @@ defmodule Juicebox.Youtube.Client do
     } = video
 
     %Juicebox.Youtube.Video{
-       video_id: video_id,
-       title: title,
-       description: description,
-       duration: duration,
-       thumbnail: thumbnail
      }
   end
 end

@@ -6,7 +6,6 @@ defmodule Juicebox.Stream.Supervisor do
   end
 
   def start_stream(stream_id) do
-    Supervisor.start_child(:stream_supervisor, [stream_id])
   end
 
   def init(_) do

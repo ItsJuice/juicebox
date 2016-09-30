@@ -18,11 +18,7 @@ defmodule Juicebox.Web do
 
   def model do
     quote do
-      use Ecto.Schema
 
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query, only: [from: 1, from: 2]
     end
   end
 
@@ -30,11 +26,7 @@ defmodule Juicebox.Web do
     quote do
       use Phoenix.Controller
 
-      alias Juicebox.Repo
-      import Ecto
-      import Ecto.Query, only: [from: 1, from: 2]
 
-      import Juicebox.Router.Helpers
     end
   end
 
@@ -46,11 +38,8 @@ defmodule Juicebox.Web do
       import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
 
       # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
 
       import Juicebox.Router.Helpers
-      import Juicebox.ErrorHelpers
-      import Juicebox.Gettext
     end
   end
 
@@ -62,11 +51,7 @@ defmodule Juicebox.Web do
 
   def channel do
     quote do
-      use Phoenix.Channel
 
-      alias Juicebox.Repo
-      import Ecto
-      import Ecto.Query, only: [from: 1, from: 2]
     end
   end
 

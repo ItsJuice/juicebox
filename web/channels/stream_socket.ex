@@ -1,10 +1,8 @@
 defmodule Juicebox.StreamSocket do
   use Phoenix.Socket
 
-  channel "stream:*", Juicebox.StreamChannel
 
   ## Transports
-  transport :websocket, Phoenix.Transports.WebSocket
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -18,7 +16,6 @@ defmodule Juicebox.StreamSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(_params, socket) do
-    {:ok, socket}
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
@@ -31,5 +28,4 @@ defmodule Juicebox.StreamSocket do
   #     Juicebox.Endpoint.broadcast("users_socket:" <> user.id, "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
-  def id(_socket), do: nil
 end

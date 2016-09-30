@@ -1,5 +1,4 @@
 defmodule Juicebox do
-  use Application
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -11,7 +10,6 @@ defmodule Juicebox do
       supervisor(Juicebox.Endpoint, []),
       # Start the Ecto repository
       worker(Juicebox.Repo, []),
-      worker(Juicebox.Stream.Supervisor, []),
       # Here you could define other workers and supervisors as children
       # worker(Juicebox.Worker, [arg1, arg2, arg3]),
     ]
@@ -25,7 +23,5 @@ defmodule Juicebox do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    Juicebox.Endpoint.config_change(changed, removed)
-    :ok
   end
 end

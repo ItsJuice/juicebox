@@ -2,7 +2,6 @@ defmodule Juicebox.Stream.Server do
   @moduledoc """
   Provides playlist-like behaviour for a queue of tracks
   """
-  use GenServer
   alias Juicebox.Stream.Control
 
   def start_link(stream_id) do
