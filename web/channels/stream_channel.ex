@@ -1,35 +1,35 @@
 defmodule Juicebox.StreamChannel do
   use Phoenix.Channel
 
-  alias Juicebox.Repo
-  alias Juicebox.Video
-  alias Juicebox.VideoServices
+  alias Phoenix.PubSub
+  alias Juicebox.Stream.Server, as: Stream
 
-  intercept ["video.added"]
+  intercept ["queue.updated"]
 
   def join("stream:" <> stream_id, _params, socket) do
-    {:ok, socket}
+    PubSub.subscribe(Juicebox.PubSub, "juicebox:stream:server:" <> stream_id)
+    {:ok, queue} = Stream.queue(stream_id)
+    {:ok, %{ queue: queue }, socket}
   end
 
-  def handle_in("video.added", %{"video_id" => video_id}, socket) do
-    IO.puts "video.added: #{video_id}"
-
-    video = VideoServices.find_or_create( %{video_id: video_id} )
-
-    changeset = Video.increment_queued_count_changeset(video)
-
-    case Repo.update(changeset) do
-      {:ok, video} ->
-        broadcast! socket, "video.added", %{ video_id: video.video_id, queued_count: video.queued_count }
-      {:error, changeset} ->
-        broadcast! socket, "video.error", %{ error: changeset.errors }
-    end
+  def handle_in("video.added", %{"stream_id" => stream_id, "video" => video} = _, socket) do
+    {:ok, state} = Stream.add(stream_id, %{ video: (for {key, val} <- video, into: %{}, do: { String.to_atom(key), val}) } )
     
     {:noreply, socket}
   end
 
-  def handle_out("video.added", payload, socket) do
-    push socket, "video.added", payload
+  def handle_out("queue.updated", payload, socket) do
+    IO.inspect "Queue updated"
+
+    push socket, "queue.updated", payload
+
+    {:noreply, socket}
+  end
+
+  def handle_info(%{ action: 'update_queue', new_queue: new_queue }, socket) do
+    IO.inspect "Got 'video.added' with #{inspect new_queue}"
+
+    broadcast! socket, "queue.updated", %{ queue: new_queue }
 
     {:noreply, socket}
   end

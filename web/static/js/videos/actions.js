@@ -1,5 +1,6 @@
 const ADD_VIDEO = 'ADD_VIDEO';
-const VIDEO_ADDED = 'VIDEO_ADDED';
+const LOAD_STATE = 'ADD_VIDEO';
+const QUEUE_UPDATED = 'QUEUE_UPDATED';
 
 const VIDEO_SAMPLES = [
   'fd02pGJx0s0',
@@ -21,22 +22,39 @@ function addVideo() {
     socketData: {
       event: 'video.added',
       payload: {
-        video_id: sampleVideo()
+        stream_id: 'main',
+        video: {
+          video_id: sampleVideo(), // pending: proper value from youtube
+          duration: 30000,  // pending: proper value from youtube
+        }
       }
     }
   }
 }
 
-function videoAdded(video) {
+function loadInitialState() {
   return {
-    type: VIDEO_ADDED,
-    video: video
+    type: LOAD_STATE,
+    socketData: {
+      event: 'video.getState',
+      payload: {
+        stream_id: 'main',
+      }
+    }
+  }
+}
+
+function queueUpdated(videos) {
+  return {
+    type: QUEUE_UPDATED,
+    videos: videos.queue
   }
 }
 
 export {
   ADD_VIDEO,
-  VIDEO_ADDED,
+  QUEUE_UPDATED,
   addVideo,
-  videoAdded
+  queueUpdated,
+  loadInitialState,
 };

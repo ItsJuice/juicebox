@@ -5,6 +5,7 @@ import routes from '../routes';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers';
 import createSocket from '../sockets/socket-middleware';
+import { queueUpdated } from '../videos/actions';
 
 const finalCreateStore = compose(
   applyMiddleware(
@@ -14,7 +15,7 @@ const finalCreateStore = compose(
     socketURL: '/stream',
     channelName: 'stream:main',
     actions: {
-      "video.added": videoAdded
+      "queue.updated": queueUpdated
     }
   })),
   reduxReactRouter({

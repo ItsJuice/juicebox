@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { videos as reducer} from '../../../../web/static/js/videos/reducers';
-import { VIDEO_ADDED } from '../../../../web/static/js/videos/actions';
+import { QUEUE_UPDATED } from '../../../../web/static/js/videos/actions';
 
 describe('video reducer', () => {
   context('with an unknown action', () => {
@@ -12,13 +12,13 @@ describe('video reducer', () => {
     });
   });
 
-  context('with the VIDEO_ADDED action', () => {
+  context('with the QUEUE_UPDATED action', () => {
     const newVideo = 'newVideo';
-    const action = { type: VIDEO_ADDED, video: newVideo };
+    const action = { type: QUEUE_UPDATED, videos: [newVideo] };
 
     context('with an empty initial state', () => {
       const initialState = [];
-      it('adds the video to the array', () => {
+      it('uses the new queue', () => {
         expect(reducer(initialState, action)).to.deep.equal([newVideo]);
       });
     });
@@ -26,8 +26,8 @@ describe('video reducer', () => {
     context('with an empty initial state', () => {
       const oldVideo = 'oldVideo';
       const initialState = [oldVideo];
-      it('adds the video to the array', () => {
-        expect(reducer(initialState, action)).to.deep.equal([oldVideo, newVideo]);
+      it('replaces the old queue with the new queue', () => {
+        expect(reducer(initialState, action)).to.deep.equal([newVideo]);
       });
     });
   });

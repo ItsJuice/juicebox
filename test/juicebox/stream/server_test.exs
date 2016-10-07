@@ -217,4 +217,17 @@ defmodule Juicebox.Stream.ServerTests do
     end
   end
 
+  describe ".id" do
+    test "with a pid it returns the id of the stream", ctx do
+      {:ok, stream_id} = Stream.id(ctx.server)
+      assert stream_id == @stream
+    end
+
+    test "with a string it returns an error" do
+      {status, _} = Stream.id("some_id")
+
+      assert status == :error
+    end
+  end
+
 end

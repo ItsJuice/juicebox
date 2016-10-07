@@ -3,14 +3,15 @@ defmodule Juicebox.Stream.Server do
   Provides playlist-like behaviour for a queue of tracks
   """
   use GenServer
+  alias Phoenix.PubSub
   alias Juicebox.Stream.Control
 
   def start_link(stream_id) do
-    GenServer.start_link(__MODULE__, %{}, name: via_tuple(stream_id))
+    GenServer.start_link(__MODULE__, stream_id, name: via_tuple(stream_id))
   end
 
-  def init(_) do
-    {:ok, %{playing: nil, timer: nil, queue: [], history: []}}
+  def init(stream_id) do
+    {:ok, %{playing: nil, timer: nil, queue: [], history: [], id: stream_id}}
   end
 
   @doc """
@@ -26,6 +27,9 @@ defmodule Juicebox.Stream.Server do
   """
   def add(stream_id, track) do
     {:ok, _} = GenServer.call(via_tuple(stream_id), {:add, track})
+
+    {:ok, new_queue} = queue(stream_id)
+    PubSub.broadcast(Juicebox.PubSub, "juicebox:stream:server:" <> stream_id, %{ action: 'update_queue', new_queue: new_queue } )
 
     # auto-play if nothing was playing
     start(stream_id)
@@ -66,6 +70,16 @@ defmodule Juicebox.Stream.Server do
     GenServer.call(via_tuple(stream_id), :history)
   end
 
+  @doc """
+  Returns the stream id
+  """
+  def id(pid) when is_pid(pid) do
+    GenServer.call(pid, :id)
+  end
+
+  def id(_), do: {:error, "Must be called with a pid"}
+
+
   defp start(stream_id) do
     GenServer.call(via_tuple(stream_id), :start)
   end
@@ -73,15 +87,20 @@ defmodule Juicebox.Stream.Server do
   ####
 
   def handle_call(:start, _from, state) do
+    IO.puts "start #{inspect state} #{inspect self}"
+
     new_state = Control.start(state)
     {:reply, {:ok, new_state}, new_state}
   end
 
   def handle_call(:remaining_time, _from, state) do
+    IO.puts "remaining_time #{inspect state} #{inspect self}"
     {:reply, Control.remaining_time(state), state}
   end
 
   def handle_call(:playing, _from, state) do
+    IO.puts "playing #{inspect state} #{inspect self}"
+
     {:reply, {:ok, state.playing}, state}
   end
 
@@ -92,6 +111,7 @@ defmodule Juicebox.Stream.Server do
 
   def handle_call({:add, track}, _from, state) do
     new_state = Control.add_track(state, track)
+    IO.puts "adding #{inspect new_state} #{inspect self()}"
     {:reply, {:ok, new_state}, new_state}
   end
 
@@ -101,11 +121,17 @@ defmodule Juicebox.Stream.Server do
     {:reply, {:ok, history}, state}
   end
 
+  def handle_call(:id, _from, %{id: id} = state) do
+    {:reply, {:ok, id}, state}
+  end
+
   def handle_cast({:vote, track_id}, state) do
     {:noreply, Control.vote(state, track_id)}
   end
 
   def handle_info(:next, state) do
+    IO.puts "next #{inspect state} #{inspect self}"
+
     {:noreply, Control.play_next(state)}
   end
 

@@ -11,7 +11,6 @@ class Video extends Component {
                 allowFullScreen>
 
         </iframe>
-        <div>Queued count: {this.props.video.queued_count}</div>
       </div>
     );
   }

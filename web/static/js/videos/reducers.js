@@ -1,12 +1,10 @@
-import { VIDEO_ADDED } from './actions';
+import { QUEUE_UPDATED } from './actions';
 import { cloneDeep } from 'lodash';
 
 function videos(state = [], action = {}) {
   switch (action.type) {
-    case VIDEO_ADDED:
-      const videos = cloneDeep(state);
-      videos.push(action.video);
-      return videos;
+    case QUEUE_UPDATED:
+      return cloneDeep(action.videos);
     default:
       return state;
   }

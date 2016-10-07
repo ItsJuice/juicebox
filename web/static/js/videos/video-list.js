@@ -16,7 +16,7 @@ class VideoList extends Component {
       <div className="video-list">
         <h2>Videos</h2>
         <a href="#add-video" onClick={_onVideoAdded.bind(this)}>Add video</a>
-        {this.props.videos.map((video, index) => <Video key={index} video={video} />)}
+        {this.props.videos.map((videoObject, index) => <Video key={index} video={videoObject.video} />)}
       </div>
     );
   }
