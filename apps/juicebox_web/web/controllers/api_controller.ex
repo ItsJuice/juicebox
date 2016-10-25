@@ -2,7 +2,7 @@ defmodule JuiceboxWeb.ApiController do
   use JuiceboxWeb.Web, :controller
 
   def videos(conn, params) do
-    case JuiceboxWeb.Youtube.Client.search(params["q"]) do
+    case JuiceboxStream.Youtube.Client.search(params["q"]) do
       {:ok, videos} ->
         render(conn, videos: videos)
       _ ->

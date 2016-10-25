@@ -1,6 +1,6 @@
-defmodule JuiceboxWeb.Stream.SupervisorTests do
+defmodule JuiceboxStream.Stream.SupervisorTests do
   use ExUnit.Case, async: true
-  alias JuiceboxWeb.Stream.Supervisor
+  alias JuiceboxStream.Stream.Supervisor
 
   setup do
     [

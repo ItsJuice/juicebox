@@ -1,5 +1,5 @@
-defmodule JuiceboxWeb.Youtube.Client do
-  @youtube_api Application.get_env(:juicebox_web, :youtube_api)
+defmodule JuiceboxStream.Youtube.Client do
+  @youtube_api Application.get_env(:juicebox_stream, :youtube_api)
 
   def search(query) do
     with {:ok, response} <- @youtube_api.search(query),
@@ -36,7 +36,7 @@ defmodule JuiceboxWeb.Youtube.Client do
       }
     } = video
 
-    %JuiceboxWeb.Youtube.Video{
+    %JuiceboxStream.Youtube.Video{
        video_id: video_id,
        title: title,
        description: description,

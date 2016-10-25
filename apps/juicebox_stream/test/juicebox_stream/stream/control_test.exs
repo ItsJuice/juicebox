@@ -1,6 +1,6 @@
-defmodule JuiceboxWeb.Stream.ControlTests do
+defmodule JuiceboxStream.Stream.ControlTests do
   use ExUnit.Case, async: true
-  alias JuiceboxWeb.Stream.Control, as: Control
+  alias JuiceboxStream.Stream.Control, as: Control
 
   setup do
     [

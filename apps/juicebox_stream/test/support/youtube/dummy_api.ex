@@ -1,4 +1,4 @@
-defmodule JuiceboxWeb.Youtube.DummyAPI do
+defmodule JuiceboxStream.Youtube.DummyAPI do
   def search("bad") do
     dummy_response(%{error: "Some API Error"})
   end

@@ -2,7 +2,7 @@ defmodule JuiceboxWeb.StreamChannelTest do
   use JuiceboxWeb.ChannelCase
 
   alias JuiceboxWeb.StreamChannel
-  alias JuiceboxWeb.Stream.Server
+  alias JuiceboxStream.Stream.Server
 
   @stream_id "main"
   @video %{id: "2222", duration: 30000}

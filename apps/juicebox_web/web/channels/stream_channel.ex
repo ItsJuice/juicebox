@@ -2,7 +2,7 @@ defmodule JuiceboxWeb.StreamChannel do
   use Phoenix.Channel
 
   alias Phoenix.PubSub
-  alias JuiceboxWeb.Stream.Server, as: Stream
+  alias JuiceboxStream.Stream.Server, as: Stream
 
   intercept ["queue.updated"]
 
@@ -19,16 +19,12 @@ defmodule JuiceboxWeb.StreamChannel do
   end
 
   def handle_out("queue.updated", payload, socket) do
-    IO.inspect "Queue updated"
-
     push socket, "queue.updated", payload
 
     {:noreply, socket}
   end
 
   def handle_info(%{ action: 'update_queue', new_queue: new_queue }, socket) do
-    IO.inspect "Got 'video.added' with #{inspect new_queue}"
-
     broadcast! socket, "queue.updated", %{ queue: new_queue }
 
     {:noreply, socket}

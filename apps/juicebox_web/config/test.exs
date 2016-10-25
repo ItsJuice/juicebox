@@ -19,4 +19,3 @@ config :juicebox_web, JuiceboxWeb.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :hound, driver: "phantomjs", host: "http://localhost", app_port: 4001
-config :juicebox_web, :youtube_api, JuiceboxWeb.Youtube.DummyAPI

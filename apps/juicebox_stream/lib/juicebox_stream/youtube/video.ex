@@ -1,4 +1,4 @@
-defmodule JuiceboxWeb.Youtube.Video do
+defmodule JuiceboxStream.Youtube.Video do
   defstruct video_id: nil,
             title: "",
             description: "",

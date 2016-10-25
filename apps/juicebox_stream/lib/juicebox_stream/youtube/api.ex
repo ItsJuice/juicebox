@@ -1,4 +1,4 @@
-defmodule JuiceboxWeb.Youtube.API do
+defmodule JuiceboxStream.Youtube.API do
   import HTTPoison
 
   def search(query) do
@@ -11,6 +11,6 @@ defmodule JuiceboxWeb.Youtube.API do
   end
 
   defp config(key) do
-    Application.get_env(:juicebox_web, JuiceboxWeb.Youtube)[key]
+    Application.get_env(:juicebox_stream, JuiceboxStream.Youtube)[key]
   end
 end

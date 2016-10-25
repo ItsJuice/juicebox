@@ -1,6 +1,6 @@
-defmodule JuiceboxWeb.Stream.Supervisor do
+defmodule JuiceboxStream.Stream.Supervisor do
   use Supervisor
-  alias JuiceboxWeb.Stream.Server, as: Stream
+  alias JuiceboxStream.Stream.Server, as: Stream
 
   def start_link do
     Supervisor.start_link(__MODULE__, [], name: :stream_supervisor)

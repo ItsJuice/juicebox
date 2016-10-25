@@ -1,8 +1,8 @@
-defmodule JuiceboxWeb.Stream.ServerTests do
+defmodule JuiceboxStream.Stream.ServerTests do
   use ExUnit.Case, async: true
-  alias JuiceboxWeb.Stream.Server, as: Stream
-  alias JuiceboxWeb.Stream.Track
-  alias JuiceboxWeb.Youtube.Video
+  alias JuiceboxStream.Stream.Server, as: Stream
+  alias JuiceboxStream.Stream.Track
+  alias JuiceboxStream.Youtube.Video
 
   @stream "test"
 

@@ -1,4 +1,4 @@
-defmodule JuiceboxWeb.Stream.Control do
+defmodule JuiceboxStream.Stream.Control do
   def start(%{playing: nil} = state) do
     play_next(state)
   end

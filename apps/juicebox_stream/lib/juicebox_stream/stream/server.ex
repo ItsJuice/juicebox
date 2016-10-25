@@ -1,10 +1,10 @@
-defmodule JuiceboxWeb.Stream.Server do
+defmodule JuiceboxStream.Stream.Server do
   @moduledoc """
   Provides playlist-like behaviour for a queue of tracks
   """
   use GenServer
   alias Phoenix.PubSub
-  alias JuiceboxWeb.Stream.Control
+  alias JuiceboxStream.Stream.Control
 
   def start_link(stream_id) do
     GenServer.start_link(__MODULE__, stream_id, name: via_tuple(stream_id))
@@ -43,7 +43,7 @@ defmodule JuiceboxWeb.Stream.Server do
   end
 
   @doc """
-  Returns the currently playing track (%JuiceboxWeb.Stream.Track{})
+  Returns the currently playing track (%JuiceboxStream.Stream.Track{})
   """
   def playing(stream_id) do
     GenServer.call(via_tuple(stream_id), :playing)
@@ -87,20 +87,15 @@ defmodule JuiceboxWeb.Stream.Server do
   ####
 
   def handle_call(:start, _from, state) do
-    IO.puts "start #{inspect state} #{inspect self}"
-
     new_state = Control.start(state)
     {:reply, {:ok, new_state}, new_state}
   end
 
   def handle_call(:remaining_time, _from, state) do
-    IO.puts "remaining_time #{inspect state} #{inspect self}"
     {:reply, Control.remaining_time(state), state}
   end
 
   def handle_call(:playing, _from, state) do
-    IO.puts "playing #{inspect state} #{inspect self}"
-
     {:reply, {:ok, state.playing}, state}
   end
 
@@ -111,7 +106,6 @@ defmodule JuiceboxWeb.Stream.Server do
 
   def handle_call({:add, track}, _from, state) do
     new_state = Control.add_track(state, track)
-    IO.puts "adding #{inspect new_state} #{inspect self()}"
     {:reply, {:ok, new_state}, new_state}
   end
 
@@ -130,8 +124,6 @@ defmodule JuiceboxWeb.Stream.Server do
   end
 
   def handle_info(:next, state) do
-    IO.puts "next #{inspect state} #{inspect self}"
-
     {:noreply, Control.play_next(state)}
   end
 
