@@ -7,7 +7,7 @@ defmodule JuiceboxWeb.StreamChannel do
   intercept ["queue.updated"]
 
   def join("stream:" <> stream_id, _params, socket) do
-    PubSub.subscribe(JuiceboxWeb.PubSub, "juicebox:stream:server:" <> stream_id)
+    PubSub.subscribe(JuiceboxStream.PubSub, "juicebox:stream:server:" <> stream_id)
     {:ok, queue} = Stream.queue(stream_id)
     {:ok, %{ queue: queue }, socket}
   end

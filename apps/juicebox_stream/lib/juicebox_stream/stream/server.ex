@@ -29,7 +29,7 @@ defmodule JuiceboxStream.Stream.Server do
     {:ok, _} = GenServer.call(via_tuple(stream_id), {:add, track})
 
     {:ok, new_queue} = queue(stream_id)
-    PubSub.broadcast(JuiceboxWeb.PubSub, "juicebox:stream:server:" <> stream_id, %{ action: 'update_queue', new_queue: new_queue } )
+    PubSub.broadcast(JuiceboxStream.PubSub, "juicebox:stream:server:" <> stream_id, %{ action: 'update_queue', new_queue: new_queue } )
 
     # auto-play if nothing was playing
     start(stream_id)
