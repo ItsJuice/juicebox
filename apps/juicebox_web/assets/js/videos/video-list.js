@@ -1,13 +1,6 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router'
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Video from './video';
-import { addVideo } from './actions';
-
-function _onVideoAdded(e) {
-  e.preventDefault();
-  this.props.addVideo({ streamId: this.props.params.streamId });
-}
 
 class VideoList extends Component {
   render() {
@@ -17,7 +10,6 @@ class VideoList extends Component {
     return (
       <div className="video-list">
         <h2>Videos</h2>
-        <a href="#add-video" onClick={_onVideoAdded.bind(this)}>Add video</a>
         {this.props.videos.map((videoObject, index) => <Video key={index} video={videoObject.video} />)}
         <Link to="/stream/juice">Juice</Link>
         <Link to="/stream/kiwi">KIWI</Link>
@@ -26,10 +18,8 @@ class VideoList extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    videos: state.videos
-  };
+VideoList.propTypes = {
+  videos: PropTypes.array
 }
 
-export default connect(mapStateToProps, { addVideo })(VideoList);
+export default VideoList;

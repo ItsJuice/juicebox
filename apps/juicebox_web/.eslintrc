@@ -1,0 +1,31 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "mocha": true
+  },
+  "plugins": [
+    "react",
+    "mocha"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    "mocha/no-exclusive-tests": "error"
+  },
+  "globals": {
+    "__": true,
+    "__DEV__": true
+  }
+}
