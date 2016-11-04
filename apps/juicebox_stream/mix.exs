@@ -1,8 +1,8 @@
-defmodule JuiceboxWeb.Mixfile do
+defmodule JuiceboxStream.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :juicebox_web,
+    [app: :juicebox_stream,
      version: "0.0.1",
      elixir: "~> 1.0",
      elixirc_paths: elixirc_paths(Mix.env),
@@ -17,10 +17,9 @@ defmodule JuiceboxWeb.Mixfile do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [mod: {JuiceboxWeb, []},
-     applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :postgrex, :httpoison, :gproc,
-                    :phoenix_pubsub, :gettext]]
+    [mod: {JuiceboxStream, []},
+     applications: [:cowboy, :logger, :phoenix_ecto, :postgrex, :httpoison, 
+                    :gproc, :phoenix_pubsub, :gettext]]
   end
 
   # Specifies which paths to compile per environment.
@@ -32,15 +31,11 @@ defmodule JuiceboxWeb.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.2.0"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.0-rc"},
       {:postgrex, "~> 0.11.2"},
-      {:phoenix_html, "~> 2.6"},
-      {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:cowboy, "~> 1.0"},
       {:ex_machina, "~> 1.0", only: :test},
-      {:hound, "~> 1.0", only: :test},
       {:junit_formatter, "~> 0.1", only: :test},
       {:httpoison, "~> 0.8.0"},
       {:gettext, "~> 0.9"},

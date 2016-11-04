@@ -45,6 +45,6 @@
   },
   "scripts": {
     "postinstall": "./node_modules/.bin/webpack -p",
-    "test": "BABEL_ENV=test mocha --compilers js:babel-register test/static/js/**/*.js"
+    "test": "BABEL_ENV=test mocha --compilers js:babel-register ./test/assets/js/**/*.js"
   }
 }

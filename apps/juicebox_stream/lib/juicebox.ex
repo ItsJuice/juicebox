@@ -1,4 +1,4 @@
-defmodule JuiceboxWeb do
+defmodule JuiceboxStream do
   use Application
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
@@ -7,24 +7,17 @@ defmodule JuiceboxWeb do
     import Supervisor.Spec, warn: false
 
     children = [
-      # Start the endpoint when the application starts
-      supervisor(JuiceboxWeb.Endpoint, []),
       # Start the Ecto repository
-      worker(JuiceboxWeb.Repo, []),
+      worker(JuiceboxStream.Repo, []),
+      worker(JuiceboxStream.Stream.Supervisor, []),
       # Here you could define other workers and supervisors as children
-      # worker(JuiceboxWeb.Worker, [arg1, arg2, arg3]),
+      # worker(JuiceboxStream.Worker, [arg1, arg2, arg3]),
+      supervisor(Phoenix.PubSub.PG2, [JuiceboxStream.PubSub, []])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: JuiceboxWeb.Supervisor]
+    opts = [strategy: :one_for_one, name: JuiceboxStream.Supervisor]
     Supervisor.start_link(children, opts)
-  end
-
-  # Tell Phoenix to update the endpoint configuration
-  # whenever the application is updated.
-  def config_change(changed, _new, removed) do
-    JuiceboxWeb.Endpoint.config_change(changed, removed)
-    :ok
   end
 end

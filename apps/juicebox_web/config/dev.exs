@@ -22,8 +22,8 @@ config :juicebox_web, JuiceboxWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-      ~r{web/views/.*(ex)$},
-      ~r{web/templates/.*(eex)$}
+      ~r{lib/web/views/.*(ex)$},
+      ~r{lib/web/templates/.*(eex)$}
     ]
   ]
 
@@ -43,17 +43,3 @@ config :juicebox_web, JuiceboxWeb.Repo,
   database: "juicebox_dev",
   hostname: "localhost",
   pool_size: 10
-
-config :juicebox_web, :youtube_api, JuiceboxWeb.Youtube.API
-
-config :juicebox_web, JuiceboxWeb.Youtube,
-  api_key: System.get_env("YOUTUBE_API_KEY"),
-  api_url: "https://www.googleapis.com/youtube/v3/search",
-  search_params: %{
-    part: "snippet",
-    safeSearch: "strict",
-    type: "video",
-    videoCategoryId: "10", # music
-    order: "viewCount",
-    videoEmbeddable: "true"
-  }
