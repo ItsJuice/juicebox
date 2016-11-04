@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    app: path.join(__dirname, 'web', 'static', 'js', 'index.js'),
+    app: path.join(__dirname, 'assets', 'js', 'index.js'),
     vendor: ['react', 'react-dom']
   },
 

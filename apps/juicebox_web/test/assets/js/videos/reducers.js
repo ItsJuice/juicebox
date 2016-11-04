@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { videos as reducer} from '../../../../web/static/js/videos/reducers';
-import { QUEUE_UPDATED } from '../../../../web/static/js/videos/actions';
+import { videos as reducer} from '../../../../assets/js/videos/reducers';
+import { QUEUE_UPDATED } from '../../../../assets/js/videos/actions';
 
 describe('video reducer', () => {
   context('with an unknown action', () => {

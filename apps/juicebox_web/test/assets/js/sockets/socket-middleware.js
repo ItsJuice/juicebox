@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import createSocket, { __RewireAPI__ as SocketMiddlewareRewireAPI } from '../../../../web/static/js/sockets/socket-middleware';
+import createSocket, { __RewireAPI__ as SocketMiddlewareRewireAPI } from '../../../../assets/js/sockets/socket-middleware';
 
 describe('socket middleware', () => {
   chai.use(sinonChai);
