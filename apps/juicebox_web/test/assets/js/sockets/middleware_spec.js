@@ -1,44 +1,36 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import createSocket, { __RewireAPI__ as SocketMiddlewareRewireAPI } from '../../../../assets/js/sockets/socket-middleware';
+import { createSocket, CONNECT_TO_CHANNEL } from '../../../../assets/js/sockets';
 
 describe('socket middleware', () => {
   chai.use(sinonChai);
 
-  const doDispatch = () => {};
-  const videoAdded = () => {};
-  const channelOnSpy = sinon.spy();
-  const channelPushSpy = sinon.spy();
-  const channelStub = () => ({
-    on: channelOnSpy,
-    push: channelPushSpy
-  });
+  let doDispatch = () => {};
+  let videoAdded = () => {};
+  let channelStub;
+  let socketStub;
+  let socketMiddleware;
 
   beforeEach(() => {
-    SocketMiddlewareRewireAPI.__Rewire__('createChannel', channelStub);
-  });
+    channelStub = {
+      leave: sinon.spy(),
+      on: sinon.spy(),
+      join: sinon.spy(),
+      push: sinon.spy()
+    };
 
-  afterEach(() => {
-    SocketMiddlewareRewireAPI.__ResetDependency__('createChannel');
-  });
-  
-  const socketMiddleware = createSocket({
-    socketURL: '/stream',
-    channelName: 'stream:main',
-    actions: {
-      'video.added': videoAdded
-    }
+    socketStub = {
+      channel: sinon.stub().returns(channelStub)
+    };
+
+    socketMiddleware = createSocket(socketStub);
   });
 
   describe('initialising the middleware', () => {
     it('returns a function', () => {
       const nextHandler = socketMiddleware( { dispatch: doDispatch } );
       expect(nextHandler).to.be.a('function');
-    });
-
-    it('adds the channel events', () => {
-      expect(channelOnSpy).to.have.been.calledWith('video.added', sinon.match.func);
     });
   });
 
@@ -50,6 +42,47 @@ describe('socket middleware', () => {
       const actionHandler = nextHandler(nextSpy);
       expect(actionHandler).to.be.a('function');
     });
+  });
+
+  describe('joining a stream', () => {
+    const nextSpy = sinon.spy();
+    let actionHandler;
+
+    beforeEach(() => {
+      const nextHandler = socketMiddleware( { dispatch: doDispatch } );
+      actionHandler = nextHandler(nextSpy);
+      actionHandler({ type: CONNECT_TO_CHANNEL, channel: 'juan.sheet' });
+    });
+
+    context('with one CONNECT_TO_CHANNEL action', () => {
+      it('connects to the topic', () => {
+        expect(socketStub.channel).to.have.been.calledWith('stream:juan.sheet');
+      });
+
+      it('joins the channel', () => {
+        expect(channelStub.join).to.have.been.calledOnce;
+      });
+    });
+
+    context('with a second CONNECT_TO_CHANNEL action', () => {
+      beforeEach(() => {
+        actionHandler({ type: CONNECT_TO_CHANNEL, channel: 'does.plenty' });
+      });
+
+      it('leaves the current channel', () => {
+        expect(channelStub.leave).to.have.been.calledOnce;
+      });
+
+      it('connects to the topic', () => {
+        expect(socketStub.channel).to.have.been.calledWith('stream:juan.sheet');
+        expect(socketStub.channel).to.have.been.calledWith('stream:does.plenty');
+      });
+
+      it('joins the new channel', () => {
+        expect(channelStub.join).to.have.been.calledTwice;
+      });
+    });
+
   });
 
   describe('calling the action handler with an action', () => {
@@ -85,8 +118,9 @@ describe('socket middleware', () => {
       it('pushes the data to the channel', () => {
         const nextHandler = socketMiddleware( { dispatch: doDispatch } );
         const actionHandler = nextHandler(nextSpy);
+        actionHandler({ type: CONNECT_TO_CHANNEL });
         actionHandler(action);
-        expect(channelPushSpy).to.have.been.calledWith(event, payload);
+        expect(channelStub.push).to.have.been.calledWith(event, payload);
       });
 
       it('calls the next function with the action with the socketData removed', () => {

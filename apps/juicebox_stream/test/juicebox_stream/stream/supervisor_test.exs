@@ -14,7 +14,7 @@ defmodule JuiceboxStream.Stream.SupervisorTests do
       {:ok, _} = Supervisor.start_stream(ctx.stream_1_id)
       {:ok, _} = Supervisor.start_stream(ctx.stream_2_id)
 
-      assert Supervisor.streams |> Enum.sort == ["main", "stream1", "stream2"]
+      assert Supervisor.streams |> Enum.sort == ["stream1", "stream2"]
     end
   end
 end

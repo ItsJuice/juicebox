@@ -4,20 +4,14 @@ import createHistory from 'history/lib/createBrowserHistory';
 import routes from '../routes';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers';
-import createSocket from '../sockets/socket-middleware';
+import { createSocket, connectToChannel, subscribeToStream } from '../sockets';
 import { queueUpdated } from '../videos/actions';
 
 const finalCreateStore = compose(
   applyMiddleware(
     thunk
   ),
-  applyMiddleware(createSocket({
-    socketURL: '/stream',
-    channelName: 'stream:main',
-    actions: {
-      "queue.updated": queueUpdated
-    }
-  })),
+  applyMiddleware(createSocket()),
   reduxReactRouter({
     routes,
     createHistory
@@ -29,6 +23,8 @@ export default function configureStore(initialState) {
     rootReducer,
     initialState
   );
+
+  subscribeToStream({action: connectToChannel, store});
 
   return store;
 };

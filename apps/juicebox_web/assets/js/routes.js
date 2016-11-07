@@ -4,7 +4,7 @@ import AppContent from './containers/app-content';
 import VideoList from './videos/video-list';
 
 export default (
-  <Route component={AppContent}>
-    <Route path="/" component={VideoList} />
+  <Route path="/" component={AppContent}>
+    <Route path="stream/:streamId" component={VideoList} />
   </Route>
 );

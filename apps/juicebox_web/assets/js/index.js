@@ -12,7 +12,7 @@ const appInit = () => {
 
   const rootElement = document.createElement('div');
   document.body.appendChild(rootElement);
-  
+
   render(<Root store={store} />, rootElement);
 };
 
