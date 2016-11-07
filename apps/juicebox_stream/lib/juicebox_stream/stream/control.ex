@@ -1,4 +1,6 @@
 defmodule JuiceboxStream.Stream.Control do
+  @silence_time Application.get_env(:juicebox_stream, :silence_time)
+
   def start(%{playing: nil} = state) do
     play_next(state)
   end
@@ -38,7 +40,7 @@ defmodule JuiceboxStream.Stream.Control do
   end
 
   def create_timer(%{playing: track} = state) do
-    timer = Process.send_after(self(), :next, track.video.duration)
+    timer = Process.send_after(self(), :next, track.video.duration + @silence_time)
     %{state | timer: timer}
   end
 
@@ -69,6 +71,6 @@ defmodule JuiceboxStream.Stream.Control do
   def remaining_time(%{timer: nil}), do: {:error, "Not playing"}
 
   def remaining_time(%{timer: timer}) do
-    {:ok, Process.read_timer(timer)}
+    {:ok, Process.read_timer(timer) - @silence_time}
   end
 end

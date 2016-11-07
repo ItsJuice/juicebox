@@ -4,7 +4,12 @@ defmodule JuiceboxStream.Stream.ServerTests do
   alias JuiceboxStream.Stream.Track
   alias JuiceboxStream.Youtube.Video
 
+  @silence_time Application.get_env(:juicebox_stream, :silence_time)
   @stream "test"
+
+  defp sleep_until_next_track do
+    :timer.sleep(35 + @silence_time)
+  end
 
   defp create_track(track_id, attrs \\ %{}) do
     %Track{
@@ -156,7 +161,7 @@ defmodule JuiceboxStream.Stream.ServerTests do
       assert Stream.history(@stream) == {:ok, []}
       Stream.skip(@stream)
       assert Stream.history(@stream) == {:ok, [ctx.track]}
-      :timer.sleep(35)
+      sleep_until_next_track()
       assert Stream.history(@stream) == {:ok, [ctx.track_1, ctx.track]}
       Stream.skip(@stream)
       assert Stream.history(@stream) == {:ok, [ctx.track_2, ctx.track_1, ctx.track]}
@@ -171,13 +176,13 @@ defmodule JuiceboxStream.Stream.ServerTests do
 
       assert Stream.playing(@stream) == {:ok, ctx.track}
 
-      :timer.sleep(35)
+      sleep_until_next_track()
       assert Stream.playing(@stream) == {:ok, ctx.track_1}
 
-      :timer.sleep(35)
+      sleep_until_next_track()
       assert Stream.playing(@stream) == {:ok, ctx.track_2}
 
-      :timer.sleep(35)
+      sleep_until_next_track()
       assert Stream.playing(@stream) == {:ok, nil}
     end
 
@@ -185,13 +190,13 @@ defmodule JuiceboxStream.Stream.ServerTests do
       Stream.add(@stream, ctx.track)
       assert Stream.playing(@stream) == {:ok, ctx.track}
 
-      :timer.sleep(35)
+      sleep_until_next_track()
       assert Stream.playing(@stream) == {:ok, nil}
 
       Stream.add(@stream, ctx.track_1)
       assert Stream.playing(@stream) == {:ok, ctx.track_1}
 
-      :timer.sleep(35)
+      sleep_until_next_track()
       assert Stream.playing(@stream) == {:ok, nil}
     end
 
@@ -206,13 +211,13 @@ defmodule JuiceboxStream.Stream.ServerTests do
       Stream.vote(@stream, 2)
       Stream.vote(@stream, 1)
 
-      :timer.sleep(35)
+      sleep_until_next_track()
       assert Stream.playing(@stream) == {:ok, %{ctx.track_2 | votes: 2}}
 
-      :timer.sleep(35)
+      sleep_until_next_track()
       assert Stream.playing(@stream) == {:ok, %{ctx.track_1 | votes: 1}}
 
-      :timer.sleep(35)
+      sleep_until_next_track()
       assert Stream.playing(@stream) == {:ok, nil}
     end
   end
