@@ -3,7 +3,7 @@ defmodule JuiceboxStream.Stream.Server do
   Provides playlist-like behaviour for a queue of tracks
   """
   use GenServer
-  alias Phoenix.PubSub
+  import JuiceboxStream.Stream.Broadcast
   alias JuiceboxStream.Stream.Control
 
   def start_link(stream_id) do
@@ -29,7 +29,7 @@ defmodule JuiceboxStream.Stream.Server do
     {:ok, _} = GenServer.call(via_tuple(stream_id), {:add, track})
 
     {:ok, new_queue} = queue(stream_id)
-    PubSub.broadcast(JuiceboxStream.PubSub, "juicebox:stream:server:" <> stream_id, %{ type: "QUEUE_UPDATED", videos: new_queue } )
+    broadcast(stream_id, "QUEUE_UPDATED", %{ videos: new_queue })
 
     # auto-play if nothing was playing
     start(stream_id)
