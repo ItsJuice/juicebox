@@ -6,6 +6,11 @@ defmodule JuiceboxStream.Stream.Server do
   import JuiceboxStream.Stream.Broadcast
   alias JuiceboxStream.Stream.Control
 
+  @actions %{
+    QUEUE_UPDATED: "QUEUE_UPDATED",
+    PLAYING_CHANGED: "PLAYING_CHANGED"
+  }
+
   def start_link(stream_id) do
     GenServer.start_link(__MODULE__, stream_id, name: via_tuple(stream_id))
   end
@@ -29,7 +34,7 @@ defmodule JuiceboxStream.Stream.Server do
     {:ok, _} = GenServer.call(via_tuple(stream_id), {:add, track})
 
     {:ok, new_queue} = queue(stream_id)
-    broadcast(stream_id, "QUEUE_UPDATED", %{ videos: new_queue })
+    broadcast(stream_id, @actions[:QUEUE_UPDATED], %{ videos: new_queue })
 
     # auto-play if nothing was playing
     start(stream_id)
@@ -100,7 +105,7 @@ defmodule JuiceboxStream.Stream.Server do
   end
 
   def handle_call(:skip, _from, state) do
-    new_state = Control.play_next(state)
+    new_state = play_next(state)
     {:reply, {:ok, new_state}, new_state}
   end
 
@@ -124,10 +129,16 @@ defmodule JuiceboxStream.Stream.Server do
   end
 
   def handle_info(:next, state) do
-    {:noreply, Control.play_next(state)}
+    {:noreply, play_next(state)}
   end
 
   defp via_tuple(stream_id) do
     {:via, :gproc, {:n, :l, {:stream, stream_id}}}
+  end
+
+  defp play_next(%{ id: stream_id, queue: queue, playing: playing } = state) do
+    broadcast(stream_id, @actions[:QUEUE_UPDATED], %{ videos: queue })
+    broadcast(stream_id, @actions[:PLAYING_CHANGED], %{ playing: playing })
+    Control.play_next(state)
   end
 end
