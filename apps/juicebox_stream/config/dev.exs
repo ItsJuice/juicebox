@@ -13,7 +13,6 @@ config :juicebox_stream, JuiceboxStream.Repo,
   pool_size: 10
 
 config :juicebox_stream, :youtube_api, JuiceboxStream.Youtube.API
-config :juicebox_stream, :silence_time, 3000
 
 config :juicebox_stream, JuiceboxStream.Youtube,
   api_key: System.get_env("YOUTUBE_API_KEY"),
