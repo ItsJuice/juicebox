@@ -22,6 +22,12 @@ defmodule JuiceboxWeb.StreamChannel do
     {:noreply, socket}
   end
 
+  def handle_in("new.reaction", %{"video" => video} = _, socket) do
+    broadcast! socket, "remote.action", %{ "type" => "NEW_REACTION", video: video }
+
+    {:noreply, socket}
+  end
+
   def handle_info(%{ type: _ } = event, socket) do
     IO.inspect "Got #{inspect event}"
 
