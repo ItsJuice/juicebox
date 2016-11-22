@@ -1,18 +1,16 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import Video from './video';
+import VideoPlaceholder from './video-placeholder';
 
 class VideoList extends Component {
   render() {
-    const { params: { streamId } } = this.props;
     const videos = this.props.videos;
+
+    if (!videos) { return null; }
 
     return (
       <div className="video-list">
         <h2>Videos</h2>
-        {this.props.videos.map((videoObject, index) => <Video key={index} video={videoObject.video} />)}
-        <Link to="/stream/juice">Juice</Link>
-        <Link to="/stream/kiwi">KIWI</Link>
+        {videos.map(({video}, index) => <VideoPlaceholder key={index} video={video} />)}
       </div>
     );
   }
