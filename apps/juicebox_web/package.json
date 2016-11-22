@@ -17,7 +17,8 @@
     "redux-thunk": "^2.1.0",
     "sass-loader": "^3.1.1",
     "style-loader": "~0.13.0",
-    "url-loader": "^0.5.7"
+    "url-loader": "^0.5.7",
+    "webpack": "~1.12.3"
   },
   "devDependencies": {
     "babel-core": "^6.17.0",
@@ -40,8 +41,7 @@
     "redux-devtools-log-monitor": "^1.0.11",
     "redux-mock-store": "^1.1.2",
     "sinon": "^1.17.5",
-    "sinon-chai": "^2.8.0",
-    "webpack": "~1.12.3"
+    "sinon-chai": "^2.8.0"
   },
   "engines": {
     "node": "5.10.0",
