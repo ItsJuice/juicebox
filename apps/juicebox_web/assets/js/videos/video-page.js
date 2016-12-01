@@ -55,13 +55,11 @@ function mapStateToProps( { videos, router } ) {
     playingStartTime = 0;
   }
 
-  console.log(videos);
-
-  return {
-    ...videos,
-    playingStartTime,
-    streamId,
-  };
+  return Object.assign({}, videos,
+    {
+      playingStartTime,
+      streamId,
+    });
 }
 
 export default connect(mapStateToProps, { addVideo })(VideoPage);

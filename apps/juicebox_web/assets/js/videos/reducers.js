@@ -6,16 +6,17 @@ import {
 function videos(state = {}, action) {
   switch (action.type) {
     case QUEUE_UPDATED:
-      return {
-        ...state,
-        queue: action.videos,
-      };
+      return Object.assign({}, state,
+                {
+                  queue: action.videos,
+                }
+              );
     case PLAYING_CHANGED:
-      return {
-        ...state,
-        playing: action.playing.video,
-        playingStartTime: action.time,
-      };
+      return Object.assign({}, state,
+        {
+          playing: action.playing.video,
+          playingStartTime: action.time,
+        });
     default:
       return state;
   }
