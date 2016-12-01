@@ -3,13 +3,7 @@ defmodule JuiceboxStream.Stream.Server do
   Provides playlist-like behaviour for a queue of tracks
   """
   use GenServer
-  import JuiceboxStream.Stream.Broadcast
   alias JuiceboxStream.Stream.Control
-
-  @actions %{
-    QUEUE_UPDATED: "QUEUE_UPDATED",
-    PLAYING_CHANGED: "PLAYING_CHANGED"
-  }
 
   def start_link(stream_id) do
     GenServer.start_link(__MODULE__, stream_id, name: via_tuple(stream_id))
@@ -33,9 +27,6 @@ defmodule JuiceboxStream.Stream.Server do
   def add(stream_id, track) do
     {:ok, _} = GenServer.call(via_tuple(stream_id), {:add, track})
 
-    {:ok, new_queue} = queue(stream_id)
-    broadcast(stream_id, @actions[:QUEUE_UPDATED], %{ videos: new_queue })
-
     # auto-play if nothing was playing
     start(stream_id)
   end
@@ -45,6 +36,13 @@ defmodule JuiceboxStream.Stream.Server do
   """
   def remaining_time(stream_id) do
     GenServer.call(via_tuple(stream_id), :remaining_time)
+  end
+
+  @doc """
+  Returns (in ms) the current playing position for the current track
+  """
+  def playing_time(stream_id) do
+    GenServer.call(via_tuple(stream_id), :playing_time)
   end
 
   @doc """
@@ -100,12 +98,16 @@ defmodule JuiceboxStream.Stream.Server do
     {:reply, Control.remaining_time(state), state}
   end
 
+  def handle_call(:playing_time, _from, state) do
+    {:reply, Control.playing_time(state), state}
+  end
+
   def handle_call(:playing, _from, state) do
     {:reply, {:ok, state.playing}, state}
   end
 
   def handle_call(:skip, _from, state) do
-    new_state = play_next(state)
+    new_state = Control.play_next(state)
     {:reply, {:ok, new_state}, new_state}
   end
 
@@ -129,16 +131,10 @@ defmodule JuiceboxStream.Stream.Server do
   end
 
   def handle_info(:next, state) do
-    {:noreply, play_next(state)}
+    {:noreply, Control.play_next(state)}
   end
 
   defp via_tuple(stream_id) do
     {:via, :gproc, {:n, :l, {:stream, stream_id}}}
-  end
-
-  defp play_next(%{ id: stream_id, queue: queue, playing: playing } = state) do
-    broadcast(stream_id, @actions[:QUEUE_UPDATED], %{ videos: queue })
-    broadcast(stream_id, @actions[:PLAYING_CHANGED], %{ playing: playing })
-    Control.play_next(state)
   end
 end

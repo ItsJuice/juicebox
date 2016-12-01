@@ -18,11 +18,11 @@ class VideoPage extends Component {
   }
 
   render() {
-    const { queue, playing } = this.props;
+    const { queue, playing, playingStartTime } = this.props;
 
     return (
       <div className="video-page">
-        <Video video={ playing } />
+        <Video video={ playing } playingStartTime={ playingStartTime }/>
         <VideoList videos={ queue }
                    addVideo={ addVideo } />
         <a href="#add-video" onClick={ this.handleVideoAdded }>Add video</a>
@@ -39,6 +39,7 @@ VideoPage.propTypes = {
   queue: PropTypes.array,
   playing: PropTypes.object,
   streamId: PropTypes.string.isRequired,
+  playingStartTime: PropTypes.integer,
 };
 
 function mapStateToProps( { videos, router } ) {
@@ -47,8 +48,18 @@ function mapStateToProps( { videos, router } ) {
     streamId = router.params.streamId;
   }
 
+  let playingStartTime;
+  if (videos.playingStartTime) {
+    playingStartTime = Math.round(videos.playingStartTime / 1000);
+  } else {
+    playingStartTime = 0;
+  }
+
+  console.log(videos);
+
   return {
     ...videos,
+    playingStartTime,
     streamId,
   };
 }

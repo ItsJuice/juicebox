@@ -14,6 +14,7 @@ function videos(state = {}, action) {
       return {
         ...state,
         playing: action.playing.video,
+        playingStartTime: action.time,
       };
     default:
       return state;

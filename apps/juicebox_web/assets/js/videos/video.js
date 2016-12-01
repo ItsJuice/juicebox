@@ -8,7 +8,7 @@ class Video extends Component {
       <div className="video" style={{display: 'inline-block'}}>
         <iframe width="280"
                 height="157"
-                src={`http://www.youtube.com/embed/${this.props.video.video_id}?autoplay=1`}
+                src={`http://www.youtube.com/embed/${this.props.video.video_id}?autoplay=1&start=${this.props.playingStartTime}`}
                 frameBorder="0"
                 allowFullScreen>
 
@@ -20,6 +20,7 @@ class Video extends Component {
 
 Video.propTypes = {
   video: PropTypes.object,
+  playingStartTime: PropTypes.integer,
 }
 
 export default Video;
