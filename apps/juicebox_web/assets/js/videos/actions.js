@@ -10,11 +10,18 @@ const VIDEO_SAMPLES = [
   'uTxythHY09k',
   'tO4dxvguQDk',
   '6hXH5gKIWEA',
-  'gzC29VwE1A'
+  'gzC29VwE1A',
 ];
 
 function sampleVideo() {
   return VIDEO_SAMPLES[Math.floor(Math.random() * VIDEO_SAMPLES.length)];
+}
+
+function search({ term }) {
+  return {
+    type: SEARCH,
+    payload: term,
+  };
 }
 
 function addVideo({ streamId }) {
@@ -26,11 +33,11 @@ function addVideo({ streamId }) {
         stream_id: streamId,
         video: {
           video_id: sampleVideo(), // pending: proper value from youtube
-          duration: 30000,  // pending: proper value from youtube
+          duration: 30000,         // pending: proper value from youtube
         }
       }
     }
-  }
+  };
 }
 
 function loadInitialState() {
@@ -42,14 +49,14 @@ function loadInitialState() {
         stream_id: 'main',
       }
     }
-  }
+  };
 }
 
 function queueUpdated(videos) {
   return {
     type: QUEUE_UPDATED,
     videos: videos.queue
-  }
+  };
 }
 
 export {

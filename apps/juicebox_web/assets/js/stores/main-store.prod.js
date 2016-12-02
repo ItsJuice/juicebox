@@ -5,7 +5,7 @@ import routes from '../routes';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers';
 import { createSocket, connectToChannel, subscribeToStream } from '../sockets';
-import { queueUpdated } from '../videos/actions';
+import { queueUpdated, search } from '../videos/actions';
 
 const finalCreateStore = compose(
   applyMiddleware(

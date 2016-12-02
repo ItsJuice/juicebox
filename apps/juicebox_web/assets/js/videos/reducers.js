@@ -1,10 +1,13 @@
-import { 
+import {
   QUEUE_UPDATED,
   PLAYING_CHANGED,
 } from './actions';
 
 function videos(state = {}, action) {
   switch (action.type) {
+    case SEARCH:
+      // Call API..
+      return state;
     case QUEUE_UPDATED:
       return Object.assign({}, state,
                 {
