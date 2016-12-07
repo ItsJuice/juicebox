@@ -6,7 +6,7 @@ function sendReaction({ streamId, video }) {
   return {
     type: SEND_REACTION,
     socketData: {
-      event: 'new.reaction',
+      event: 'reaction.sent',
       payload: {
         video: video
       }

@@ -22,7 +22,7 @@ defmodule JuiceboxWeb.StreamChannel do
     {:noreply, socket}
   end
 
-  def handle_in("new.reaction", %{"video" => video} = _, socket) do
+  def handle_in("reaction.sent", %{"video" => video} = _, socket) do
     broadcast! socket, "remote.action", %{ "type" => "NEW_REACTION", video: video }
 
     {:noreply, socket}
