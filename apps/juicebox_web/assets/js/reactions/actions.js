@@ -8,7 +8,8 @@ function sendReaction({ streamId, video }) {
     socketData: {
       event: 'reaction.sent',
       payload: {
-        video: video
+        video: video,
+        stream_id: streamId,
       }
     }
   }

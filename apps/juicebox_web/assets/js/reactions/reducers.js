@@ -1,12 +1,14 @@
 import { NEW_REACTION, NEXT_REACTION } from './actions';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, omit } from 'lodash';
 
-function reactions(state = [], action = {}) {
+function reactions(state = {}, action = {}) {
   switch (action.type) {
     case NEW_REACTION:
-      return [action.video, ...state];
-    case NEXT_REACTION:
-      return state.slice(1);
+      return Object.assign({},
+         omit(state, action.user_id),
+         action.video && {
+           [action.user_id]: action.video
+         });
     default:
       return state;
   }

@@ -2,21 +2,32 @@ import './styles.scss';
 import React, { Component } from 'react';
 
 class ReactionPlayer extends Component {
-  render() {
-    if (!this.props.reaction) {
-      return (
-        <div className="reaction"></div>
-      );
-    }
+  constructor(props) {
+    super(props);
+    this.onLoop = this.onLoop.bind(this);
+    this.state = { isNew: true };
+  }
 
+  onLoop() {
+    this.setState({isNew: false});
+    this.video.play();
+  }
+
+  componentWillReceiveProps({ reaction }) {
+    if (reaction !== this.props.reaction) {
+      this.setState({isNew: true});
+    }
+  }
+
+  render() {
     return (
-      <div className="reaction reaction-playing">
-        <video
-          autoPlay
-          src={ this.props.reaction.video }
-          onEnded={ this.props.onEnded }>
-        </video>
-      </div>
+      <video
+        className={ this.state.isNew ? 'new-reaction' : '' }
+        autoPlay
+        ref={ (video) => { this.video = video } }
+        src={ this.props.reaction }
+        onEnded={ this.onLoop }>
+      </video>
     );
   }
 }

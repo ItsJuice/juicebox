@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { sendReaction, nextReaction } from './actions';
+import { map } from 'lodash';
+import { sendReaction } from './actions';
 import ReactionRecorder from './recorder';
 import ReactionPlayer from './player';
 
 class Reactions extends Component {
+  reactions() {
+    return map(this.props.reactions, (video, userId) => {
+      return <ReactionPlayer reaction={video} key={userId} />
+    });
+  }
+
   render() {
     return (
       <div>
         <ReactionRecorder onRecord={_send.bind(this)} />
-        <ReactionPlayer reaction={this.props.reaction} onEnded={this.props.nextReaction} />
+        <div className="reactions">
+          { this.reactions() }
+        </div>
       </div>
     );
   }
@@ -24,8 +33,8 @@ function _send(video) {
 
 function mapStateToProps(state) {
   return {
-    reaction: state.reactions[0]
+    reactions: state.reactions
   }
 }
 
-export default connect(mapStateToProps, { sendReaction, nextReaction })(Reactions);
+export default connect(mapStateToProps, { sendReaction })(Reactions);
