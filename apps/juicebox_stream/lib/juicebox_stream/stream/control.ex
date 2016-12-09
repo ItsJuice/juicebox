@@ -1,25 +1,10 @@
 defmodule JuiceboxStream.Stream.Control do
   @silence_time Application.get_env(:juicebox_stream, :silence_time)
 
-  import JuiceboxStream.Stream.Broadcast
-
-  @actions %{
-    QUEUE_UPDATED: "QUEUE_UPDATED",
-    PLAYING_CHANGED: "PLAYING_CHANGED"
-  }
-
-  def start(%{playing: nil} = state) do
-    play_next(state)
-  end
-  def start(state), do: state
-
-  def play_next(%{id: stream_id, queue: queue, playing: playing} = state) do
+  def play_next(state) do
     stop_track(state)
-      |> next_track
-      |> start_timer
-
+    |> next_track
   end
-
 
   def stop_track(%{playing: nil} = state), do: state
 
@@ -28,45 +13,16 @@ defmodule JuiceboxStream.Stream.Control do
               history: [track | history]}
   end
 
-
   def next_track(%{queue: []} = state) do
     %{state | playing: nil}
   end
 
-  def next_track(%{queue: [track | queue], id: stream_id} = state) do
-    broadcast(stream_id, @actions[:QUEUE_UPDATED], %{ videos: queue })
-    broadcast(stream_id, @actions[:PLAYING_CHANGED], %{ playing: track })
-    
+  def next_track(%{queue: [track | queue]} = state) do
     %{state | queue: queue, playing: track}
   end
 
-  def start_timer(state) do
-    clear_timer(state)
-    create_timer(state)
-  end
-
-
-  def create_timer(%{playing: nil} = state) do
-    %{state | timer: nil}
-  end
-
-  def create_timer(%{playing: track} = state) do
-    timer = Process.send_after(self(), :next, track.video.duration + @silence_time)
-    %{state | timer: timer}
-  end
-
-
-  def clear_timer(%{timer: nil}), do: nil
-
-  def clear_timer(%{timer: timer}) do
-    Process.cancel_timer(timer)
-  end
-
-  def add_track(%{queue: queue, id: stream_id} = state, track) do
+  def add_track(%{queue: queue} = state, track) do
     new_queue = queue ++ [track]
-
-    broadcast(stream_id, @actions[:QUEUE_UPDATED], %{ videos: new_queue })
-    
     %{state | queue: new_queue}
   end
 
