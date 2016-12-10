@@ -95,6 +95,27 @@ defmodule JuiceboxStream.Stream.ServerTests do
     end
   end
 
+
+  describe ".playing_time" do
+    test "returns the elapsed time for the current track", ctx do
+      Stream.add(@stream, ctx.track)
+
+      :timer.sleep(10)
+      {:ok, time} = Stream.playing_time(@stream)
+      assert time >= 10
+      assert time < 20
+
+      :timer.sleep(10)
+      {:ok, time} = Stream.playing_time(@stream)
+      assert time >= 20
+      assert time < 30
+    end
+
+    test "returns an error if nothing is playing" do
+      assert {:error, _} = Stream.playing_time(@stream)
+    end
+  end
+
   describe ".queue" do
     test "returns the tracks in the queue", ctx do
       Stream.add(@stream, ctx.track)

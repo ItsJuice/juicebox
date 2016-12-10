@@ -90,7 +90,6 @@ defmodule JuiceboxStream.Stream.Server do
 
   def id(_), do: {:error, "Must be called with a pid"}
 
-
   defp start(stream_id) do
     GenServer.call(via_tuple(stream_id), :start)
   end
@@ -107,11 +106,11 @@ defmodule JuiceboxStream.Stream.Server do
   end
 
   def handle_call(:remaining_time, _from, state) do
-    {:reply, Control.remaining_time(state), state}
+    {:reply, get_remaining_time(state), state}
   end
 
   def handle_call(:playing_time, _from, state) do
-    {:reply, Control.playing_time(state), state}
+    {:reply, get_playing_time(state), state}
   end
 
   def handle_call(:playing, _from, state) do
@@ -150,7 +149,6 @@ defmodule JuiceboxStream.Stream.Server do
   defp play_next(state) do
     new_state = Control.play_next(state)
     |> start_timer
-    IO.inspect new_state
 
     broadcast(state.id, @actions[:QUEUE_UPDATED], %{ videos: new_state.queue })
     broadcast(state.id, @actions[:PLAYING_CHANGED], %{ playing: new_state.playing })
@@ -176,6 +174,19 @@ defmodule JuiceboxStream.Stream.Server do
 
   defp clear_timer(%{timer: timer}) do
     Process.cancel_timer(timer)
+  end
+
+  defp get_remaining_time(%{timer: nil}), do: {:error, "Not playing"}
+
+  defp get_remaining_time(%{timer: timer}) do
+    {:ok, Process.read_timer(timer) - @silence_time}
+  end
+
+  defp get_playing_time(%{timer: nil}), do: {:error, "Not playing"}
+
+  defp get_playing_time(%{timer: timer, playing: track} = state) do
+    {:ok, time} = get_remaining_time(state)
+    {:ok, track.video.duration - time}
   end
 
   defp via_tuple(stream_id) do

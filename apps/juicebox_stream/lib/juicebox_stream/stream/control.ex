@@ -37,16 +37,4 @@ defmodule JuiceboxStream.Stream.Control do
 
     %{state | queue: new_queue}
   end
-
-  def remaining_time(%{timer: nil}), do: {:error, "Not playing"}
-
-  def remaining_time(%{timer: timer}) do
-    {:ok, Process.read_timer(timer) - @silence_time}
-  end
-
-  def playing_time(%{timer: nil}), do: {:error, "Not playing"}
-
-  def playing_time(%{timer: timer, playing: track}) do
-    {:ok, track.video.duration - Process.read_timer(timer)}
-  end
 end
