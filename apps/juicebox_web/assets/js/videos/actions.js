@@ -1,6 +1,7 @@
 const ADD_VIDEO = 'ADD_VIDEO';
 const LOAD_STATE = 'ADD_VIDEO';
 const QUEUE_UPDATED = 'QUEUE_UPDATED';
+const PLAYING_CHANGED = 'PLAYING_CHANGED';
 
 const VIDEO_SAMPLES = [
   'fd02pGJx0s0',
@@ -54,6 +55,7 @@ function queueUpdated(videos) {
 export {
   ADD_VIDEO,
   QUEUE_UPDATED,
+  PLAYING_CHANGED,
   addVideo,
   queueUpdated,
   loadInitialState,

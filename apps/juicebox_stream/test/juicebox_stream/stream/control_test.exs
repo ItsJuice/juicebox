@@ -33,7 +33,7 @@ defmodule JuiceboxStream.Stream.ControlTests do
     test "removes an item from the queue and starts playing it", ctx do
       {v1, v2, _} = ctx.videos
 
-      state = Control.next_track(%{playing: nil, queue: [v1, v2]})
+      state = Control.next_track(%{playing: nil, queue: [v1, v2], id: "1"})
 
       assert state.playing == v1
       assert state.queue == [v2]
@@ -44,7 +44,7 @@ defmodule JuiceboxStream.Stream.ControlTests do
     test "adds a track to the queue", ctx do
       {v1, v2, v3} = ctx.videos
 
-      state = Control.add_track(%{queue: []}, v1)
+      state = Control.add_track(%{queue: [], id: "1"}, v1)
               |> Control.add_track(v2)
               |> Control.add_track(v3)
 
