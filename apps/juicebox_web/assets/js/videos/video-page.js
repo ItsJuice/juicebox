@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import Video from './video';
 import { addVideo } from './actions';
 import VideoList from './video-list';
+import Reactions from '../reactions/reactions';
+import './styles.scss';
 
 class VideoPage extends Component {
 
@@ -29,6 +31,7 @@ class VideoPage extends Component {
 
         <Link to="/stream/juice">Juice</Link>
         <Link to="/stream/kiwi">KIWI</Link>
+        <Reactions streamId={this.props.streamId} />
       </div>
     );
   }
