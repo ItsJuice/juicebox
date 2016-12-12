@@ -1,6 +1,10 @@
 {
   "name": "juicebox",
   "version": "0.0.1",
+  "engines": {
+    "node": "6.9.1",
+    "npm": "3.8.3"
+  },
   "scripts": {
     "postinstall": "cd apps/juicebox_web && npm install",
     "test": "cd apps/juicebox_web && npm test"

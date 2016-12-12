@@ -19,15 +19,15 @@ describe('video reducer', () => {
     context('with an empty initial state', () => {
       const initialState = [];
       it('uses the new queue', () => {
-        expect(reducer(initialState, action)).to.deep.equal([newVideo]);
+        expect(reducer(initialState, action)).to.deep.equal( { queue: [newVideo] });
       });
     });
 
-    context('with an empty initial state', () => {
+    context('with a non-empty initial state', () => {
       const oldVideo = 'oldVideo';
-      const initialState = [oldVideo];
+      const initialState = { queue: [oldVideo] };
       it('replaces the old queue with the new queue', () => {
-        expect(reducer(initialState, action)).to.deep.equal([newVideo]);
+        expect(reducer(initialState, action)).to.deep.equal({ queue: [newVideo] });
       });
     });
   });

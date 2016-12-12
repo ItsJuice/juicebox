@@ -32,8 +32,15 @@ defmodule JuiceboxWeb.StreamChannel do
 
   def handle_info({:after_join, stream_id}, socket) do
     {:ok, queue} = Stream.queue(stream_id)
+    {:ok, playing} = Stream.playing(stream_id)
 
     push socket, "remote.action", %{ videos: queue, type: "QUEUE_UPDATED" }
+
+    case Stream.playing_time(stream_id) do
+      {:ok, playing_time} ->
+        push socket, "remote.action", %{ playing: playing, type: "PLAYING_CHANGED", time: playing_time }
+      {:error, error} -> IO.inspect error
+    end
 
     {:noreply, socket}
   end
