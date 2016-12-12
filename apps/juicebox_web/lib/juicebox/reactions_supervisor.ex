@@ -7,7 +7,7 @@ defmodule JuiceboxWeb.Reactions.Supervisor do
   end
 
   def start_reactions(stream_id) do
-    IO.inspect Supervisor.start_child(:reactions_supervisor, [stream_id])
+    Supervisor.start_child(:reactions_supervisor, [stream_id])
   end
 
   def init(_) do

@@ -49,7 +49,7 @@ function _startRecording(stream) {
 
   mediaRecorder.onstop = function(){
     encoder.encode(function(video) {
-      send({ video });
+      send(video);
     });
 
     vid.src = '';

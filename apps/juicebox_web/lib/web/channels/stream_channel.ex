@@ -28,16 +28,15 @@ defmodule JuiceboxWeb.StreamChannel do
   def handle_in("video.added", %{"stream_id" => stream_id, "video" => video} = _, socket) do
     {:ok, state} = Stream.add(stream_id, %{ video: (for {key, val} <- video, into: %{}, do: { String.to_atom(key), val}) } )
 
-    {:noreply, socket}
+    {:reply, :ok, socket}
   end
 
   def handle_in("reaction.sent", %{"stream_id" => stream_id, "video" => video}, socket) do
-    %{"video" => video_data} = video
-    Reactions.put(stream_id, socket.assigns.user_id, video_data)
+    Reactions.put(stream_id, socket.assigns.user_id, video)
 
-    broadcast_reaction(socket, %{ video: video_data, user_id: socket.assigns.user_id })
+    broadcast_reaction(socket, %{ video: video, user_id: socket.assigns.user_id })
 
-    {:noreply, socket}
+    {:reply, :ok, socket}
   end
 
   def handle_info(%{ type: _ } = event, socket) do
@@ -66,7 +65,7 @@ defmodule JuiceboxWeb.StreamChannel do
     case Stream.playing_time(stream_id) do
       {:ok, playing_time} ->
         push socket, "remote.action", %{ playing: playing, type: "PLAYING_CHANGED", time: playing_time }
-      {:error, error} -> IO.inspect error
+      {:error, _} -> nil
     end
 
     {:noreply, socket}
