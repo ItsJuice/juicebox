@@ -24,7 +24,6 @@ defmodule JuiceboxWeb.Router do
 
     get "/", PageController, :index
     get "/stream/:stream_id", PageController, :index
-    get "/react/:stream_id", PageController, :index
   end
 
   # Other scopes may use custom stacks.

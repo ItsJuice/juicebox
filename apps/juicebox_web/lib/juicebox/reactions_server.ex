@@ -10,7 +10,7 @@ defmodule JuiceboxWeb.Reactions.Server do
   Gets a video by key.
   """
   def get(stream_id, key) do
-    IO.inspect Agent.get(via_tuple(stream_id), &Map.get(&1, key))
+    Agent.get(via_tuple(stream_id), &Map.get(&1, key))
   end
 
   @doc """
@@ -24,7 +24,7 @@ defmodule JuiceboxWeb.Reactions.Server do
   Updates the video for the given key
   """
   def put(stream_id, key, video) do
-    IO.inspect Agent.update(via_tuple(stream_id), &Map.put(&1, key, video))
+    Agent.update(via_tuple(stream_id), &Map.put(&1, key, video))
   end
 
   @doc """

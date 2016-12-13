@@ -26,7 +26,7 @@ class Reactions extends Component {
 
 function _send(video) {
   this.props.sendReaction({
-    streamId: this.props.params.streamId,
+    streamId: this.props.streamId,
     video
   });
 }
