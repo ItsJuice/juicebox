@@ -1,6 +1,7 @@
 import {
   QUEUE_UPDATED,
   PLAYING_CHANGED,
+  RECEIVE_TERM,
 } from './actions';
 
 function videos(state = {}, action) {

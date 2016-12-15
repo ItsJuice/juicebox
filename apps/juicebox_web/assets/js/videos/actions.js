@@ -18,10 +18,23 @@ function sampleVideo() {
   return VIDEO_SAMPLES[Math.floor(Math.random() * VIDEO_SAMPLES.length)];
 }
 
-function receiveTerm({ term }) {
+function receiveResults(results) {
   return {
-    type: RECEIVE_TERM,
-    payload: term,
+    type: RECEIVE_RESULTS,
+    payload: results,
+  };
+}
+
+function receiveTerm({ term }) {
+  return dispatch => {
+    fetch(`/api/videos?q=${term}`, {
+      method: 'get'
+    }).then(function(response) {
+      console.log('success', response);
+      dispatch(receiveResults(response));
+    }).catch(function(error) {
+      console.log('error', error);
+    });
   };
 }
 
