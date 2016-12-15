@@ -3,6 +3,7 @@ const LOAD_STATE = 'ADD_VIDEO';
 const QUEUE_UPDATED = 'QUEUE_UPDATED';
 const PLAYING_CHANGED = 'PLAYING_CHANGED';
 const RECEIVE_TERM = 'RECEIVE_TERM';
+const RECEIVE_RESULTS = 'RECEIVE_RESULTS';
 
 const VIDEO_SAMPLES = [
   'fd02pGJx0s0',
@@ -30,10 +31,14 @@ function receiveTerm({ term }) {
     fetch(`/api/videos?q=${term}`, {
       method: 'get'
     }).then(function(response) {
-      console.log('success', response);
-      dispatch(receiveResults(response));
+      if (response.status === '500') {
+        // Handle response errors
+      } else {
+        const results = response.body.videos || [];
+        dispatch(receiveResults(results));
+      }
     }).catch(function(error) {
-      console.log('error', error);
+      // Handle request errors
     });
   };
 }
@@ -78,7 +83,9 @@ export {
   QUEUE_UPDATED,
   PLAYING_CHANGED,
   RECEIVE_TERM,
+  RECEIVE_RESULTS,
   receiveTerm,
+  receiveResults,
   addVideo,
   queueUpdated,
   loadInitialState,
