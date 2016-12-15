@@ -5,8 +5,7 @@ import {
 
 function videos(state = {}, action) {
   switch (action.type) {
-    case SEARCH:
-      // Call API..
+    case RECEIVE_TERM:
       return state;
     case QUEUE_UPDATED:
       return Object.assign({}, state,

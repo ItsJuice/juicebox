@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { search } from './actions';
+import { receiveTerm } from './actions';
 import SearchBar from './search-bar';
 import ResultList from './result-list';
 
@@ -12,7 +12,7 @@ class Search extends Component {
   render() {
     return (
       <div>
-        <SearchBar search={this.props.search} />
+        <SearchBar receiveTerm={this.props.receiveTerm} />
         <ResultList videos={this.props.videos} />
       </div>
     );
@@ -21,14 +21,14 @@ class Search extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    videos: state.videos,
+    videos: state.results,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    search: ({ term }) => {
-      dispatch(search({ term }));
+    receiveTerm: ({ term }) => {
+      dispatch(receiveTerm({ term }));
     },
   };
 };

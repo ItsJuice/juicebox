@@ -1,28 +1,18 @@
 import React, { Component } from 'react';
+import { debounce } from 'lodash';
 
-const WAIT_TIME = 1500;
+// const WAIT_TIME = 1500;
 
-function _resetTimer(timer) {
-  if (timer) { clearTimeout(timer) };
-}
-
-function _smartSearch() {
-  const { search } = this.props;
-  const { state: { timer } } = this;
-
-  _resetTimer(timer);
-  timer = setTimeout(state => { search(state); }, WAIT_TIME);
+function smartSearch(e) {
+  this.setState({ term: e.target.value });
+  this.props.receiveTerm(this.state);
 }
 
 class SearchBar extends Component {
   constructor(props) {
     super(props);
-    _smartSearch = _smartSearch.bind(this);
-
-    this.state = {
-      timer: null,
-      term: '',
-    };
+    smartSearch = smartSearch.bind(this);
+    this.state = { term: '' };
   }
 
   render() {
@@ -32,7 +22,7 @@ class SearchBar extends Component {
         <input
           type="text"
           value={this.state.term}
-          onChange={_smartSearch}
+          onChange={smartSearch}
         />
       </div>
     );
