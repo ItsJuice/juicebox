@@ -23,7 +23,7 @@ defmodule JuiceboxStream.Stream.Supervisor do
 
   def init(_) do
     children = [
-      worker(Stream, [])
+      worker(Stream, [], restart: :transient)
     ]
 
     supervise(children, strategy: :simple_one_for_one)
