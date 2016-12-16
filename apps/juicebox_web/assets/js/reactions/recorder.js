@@ -75,7 +75,7 @@ function _record(e) {
       'optional': []
     }
   };
-
+  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
   navigator.getUserMedia(constraints, _startRecording.bind(this), _errorCallback);
 }
 
