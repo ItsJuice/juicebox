@@ -17,3 +17,6 @@ config :juicebox_stream, :silence_time, 3000 # silence between tracks
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
+
+config :juicebox_stream, JuiceboxStream.Youtube,
+  api_url: "https://www.googleapis.com/youtube/v3"
