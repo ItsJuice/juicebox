@@ -2,21 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Video from './video';
+import Search from '../search/search';
 import { addVideo } from './actions';
 import VideoList from './video-list';
 
 class VideoPage extends Component {
-
-  constructor(props) {
-    super(props);
-    this.handleVideoAdded = this.handleVideoAdded.bind(this);
-  }
-
-  handleVideoAdded(e) {
-    e.preventDefault();
-    this.props.addVideo({ streamId: this.props.streamId });
-  }
-
   render() {
     const { queue, playing, playingStartTime } = this.props;
 
@@ -25,10 +15,9 @@ class VideoPage extends Component {
         <Video video={ playing } playingStartTime={ playingStartTime }/>
         <VideoList videos={ queue }
                    addVideo={ addVideo } />
-        <a href="#add-video" onClick={ this.handleVideoAdded }>Add video</a>
 
-        <Link to="/stream/juice">Juice</Link>
-        <Link to="/stream/kiwi">KIWI</Link>
+
+        <Search streamId={ this.props.streamId } />
       </div>
     );
   }

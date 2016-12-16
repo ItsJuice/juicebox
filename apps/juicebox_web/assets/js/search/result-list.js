@@ -15,7 +15,7 @@ class ResultList extends Component {
       <div className="result-list">
         <h2>Results</h2>
         <ul>
-          {this.results().map(result => <Result result={result} />)}
+          {this.results().map(result => <Result result={result} onSelect={ this.props.onSelect } />)}
         </ul>
       </div>
     );

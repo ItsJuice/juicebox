@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { debounce } from 'lodash';
 
-// const WAIT_TIME = 1500;
+const WAIT_TIME = 500;
 
 function smartSearch(e) {
-  this.setState({ term: e.target.value });
+  const term = { term: e.target.value };
+  this.setState(term);
+  receiveTerm(term);
+}
+
+function receiveTerm(term) {
   this.props.receiveTerm(this.state);
 }
 
@@ -12,6 +17,7 @@ class SearchBar extends Component {
   constructor(props) {
     super(props);
     smartSearch = smartSearch.bind(this);
+    receiveTerm = debounce(receiveTerm.bind(this), WAIT_TIME);
     this.state = { term: '' };
   }
 

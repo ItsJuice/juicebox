@@ -10,7 +10,7 @@ defmodule JuiceboxStream.Youtube.ClientTests do
         title: "Dummy",
         description: "Video",
         thumbnail: "test.jpg",
-        duration: 92
+        duration: 92000
       }
     ]
   end

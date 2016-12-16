@@ -64,7 +64,7 @@ defmodule JuiceboxStream.Youtube.Client do
     %JuiceboxStream.Youtube.Video{
        video_id: video_id,
        title: title,
-       duration: JuiceboxStream.Youtube.Time.parse(duration),
+       duration: JuiceboxStream.Youtube.Time.parse(duration) * 1000,
        description: description,
        thumbnail: thumbnail
      }
