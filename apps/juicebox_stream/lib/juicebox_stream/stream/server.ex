@@ -190,6 +190,6 @@ defmodule JuiceboxStream.Stream.Server do
   end
 
   defp via_tuple(stream_id) do
-    {:via, :gproc, {:n, :l, {:stream, stream_id}}}
+    {:via, Registry, {:stream_process_registry, stream_id}}
   end
 end
