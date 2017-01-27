@@ -3,6 +3,7 @@ defmodule JuiceboxStream.Youtube.Time do
   @doc """
   Converts a Youtube duration string to seconds (integer)
   """
+  @spec parse(String.t) :: integer()
   def parse(duration) do
     String.split(duration, ["P","D","T","H","M","S"], trim: true)
     |> Enum.map(&String.to_integer/1)

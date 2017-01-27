@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { receiveTerm } from './actions';
 import { addVideo } from '../videos/actions';
@@ -12,7 +12,6 @@ class Search extends Component {
   }
 
   handleVideoAdded(video) {
-    console.log(this.props.streamId, video);
     this.props.addVideo({
       streamId: this.props.streamId,
       video: video
@@ -44,6 +43,13 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(addVideo(video));
     }
   };
+};
+
+Search.propTypes = {
+  results: PropTypes.array,
+  receiveTerm: PropTypes.func,
+  addVideo: PropTypes.func,
+  streamId: PropTypes.string,
 };
 
 export default connect(

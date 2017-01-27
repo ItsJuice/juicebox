@@ -7,7 +7,6 @@ import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import { createSocket, connectToChannel, subscribeToStream } from '../sockets';
 import rootReducer from './reducers';
-import { loadInitialState, queueUpdated, search } from '../videos/actions';
 
 const finalCreateStore = compose(
   applyMiddleware(

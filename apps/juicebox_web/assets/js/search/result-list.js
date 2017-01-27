@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Result from './result';
 
 class ResultList extends Component {
@@ -21,5 +21,10 @@ class ResultList extends Component {
     );
   }
 }
+
+ResultList.propTypes = {
+  onSelect: PropTypes.func,
+  results: PropTypes.array,
+};
 
 export default ResultList;

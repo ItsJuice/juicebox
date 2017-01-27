@@ -1,5 +1,5 @@
 import './styles.scss';
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 class ReactionPlayer extends Component {
   constructor(props) {
@@ -31,5 +31,9 @@ class ReactionPlayer extends Component {
     );
   }
 }
+
+ReactionPlayer.propTypes = {
+  reaction: PropTypes.string,
+};
 
 export default ReactionPlayer;

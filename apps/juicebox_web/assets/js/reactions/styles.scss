@@ -1,21 +1,15 @@
 .reactions {
-  width: 100%;
   display: flex;
+  width: 100%;
   justify-content: center;
 
   video {
-    flex: 1 0 0px;
+    flex: 1 0 0;
     width: 0;
-    transition: all 0.3s;
+    transition: all .3s;
+
     &.new-reaction {
       transform: translateY(-20px);
     }
   }
-}
-
-
-.reaction {
-}
-
-.reaction-playing {
 }

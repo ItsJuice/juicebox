@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Video from './video';
 import Search from '../search/search';

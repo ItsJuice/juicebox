@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+/*global MediaRecorder*/
+
+import React, { Component, PropTypes } from 'react';
 import { delay } from 'lodash';
 import VideoEncoder from './video-encoder';
 
@@ -14,6 +15,10 @@ class ReactionRecorder extends Component {
   }
 }
 
+ReactionRecorder.propTypes = {
+  onRecord: PropTypes.func,
+};
+
 function _startRecording(stream) {
   const send = this.props.onRecord.bind(this);
 
@@ -21,12 +26,14 @@ function _startRecording(stream) {
   let mediaRecorder;
 
   if (typeof MediaRecorder.isTypeSupported == 'function'){
+    let options;
+
     if (MediaRecorder.isTypeSupported('video/webm;codecs=h264')) {
-      var options = {mimeType: 'video/webm;codecs=h264'};
+      options = {mimeType: 'video/webm;codecs=h264'};
     } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
-      var options = {mimeType: 'video/webm;codecs=vp9'};
+      options = {mimeType: 'video/webm;codecs=vp9'};
     } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
-      var options = {mimeType: 'video/webm;codecs=vp8'};
+      options = {mimeType: 'video/webm;codecs=vp8'};
     }
     mediaRecorder = new MediaRecorder(stream, options);
   }else{
@@ -57,8 +64,8 @@ function _startRecording(stream) {
   };
 }
 
-function _errorCallback(error) {
-  console.log('navigator.getUserMedia error: ', error);
+function _errorCallback() {
+  // display warning to user
 }
 
 function _record(e) {

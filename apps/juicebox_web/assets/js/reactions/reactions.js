@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { map } from 'lodash';
 import { sendReaction } from './actions';
@@ -23,6 +23,10 @@ class Reactions extends Component {
     );
   }
 }
+
+Reactions.propTypes = {
+  reactions: PropTypes.array,
+};
 
 function _send(video) {
   this.props.sendReaction({

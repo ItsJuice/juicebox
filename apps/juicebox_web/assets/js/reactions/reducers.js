@@ -1,5 +1,5 @@
-import { NEW_REACTION, NEXT_REACTION } from './actions';
-import { cloneDeep, omit } from 'lodash';
+import { NEW_REACTION } from './actions';
+import { omit } from 'lodash';
 
 function reactions(state = {}, action = {}) {
   switch (action.type) {

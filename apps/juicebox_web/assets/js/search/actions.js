@@ -20,7 +20,7 @@ function receiveTerm({ term }) {
           dispatch(receiveResults(results));
         });
       }
-    }).catch(function(error) {
+    }).catch(function() {
       // Handle request errors
     });
   };

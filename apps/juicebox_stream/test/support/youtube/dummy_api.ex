@@ -1,8 +1,10 @@
 defmodule JuiceboxStream.Youtube.DummyAPI do
+  @spec search(String.t, map) :: map
   def search("bad", _) do
     %{error: "Some API Error"}
   end
 
+  @spec search(any, any) :: map
   def search(_, _) do
     %{
       "items" => [
@@ -24,6 +26,7 @@ defmodule JuiceboxStream.Youtube.DummyAPI do
     }
   end
 
+  @spec videos(any, any) :: map
   def videos(_, _) do
     %{
       "items" => [%{

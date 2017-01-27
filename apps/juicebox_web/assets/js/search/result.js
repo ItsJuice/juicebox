@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 class Result extends Component {
   constructor(props) {
@@ -21,5 +21,13 @@ class Result extends Component {
     );
   }
 }
+
+Result.propTypes = {
+  result: PropTypes.shape({
+    title: PropTypes.title,
+    thumbnail: PropTypes.thumbnail,
+  }),
+  onSelect: PropTypes.func,
+};
 
 export default Result;

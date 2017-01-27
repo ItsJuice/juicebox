@@ -1,12 +1,14 @@
 defmodule JuiceboxStream.Youtube.API do
   import HTTPoison
 
+  @spec search(String.t, map) :: [map]
   def search(query, params \\ %{}) do
     params =  Map.put(params, :q, query)
     call("/search", params)
     |> parse_response
   end
 
+  @spec videos([String.t], map) :: [map]
   def videos(ids, params \\ %{}) do
     params = Map.put(params, :id, Enum.join(ids, ","))
     call("/videos", params)

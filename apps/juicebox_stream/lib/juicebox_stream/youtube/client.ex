@@ -35,7 +35,7 @@ defmodule JuiceboxStream.Youtube.Client do
 
   defp fetch_video_meta_data(videos) do
     Enum.map(videos, &(&1["id"]["videoId"]))
-    |> @youtube_api.videos(%{ part: "contentDetails" })
+    |> @youtube_api.videos(%{part: "contentDetails"})
     |> Map.get("items")
   end
 
