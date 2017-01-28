@@ -4,13 +4,14 @@ defmodule JuiceboxWeb.StreamChannelTest do
   alias JuiceboxWeb.StreamChannel
   alias JuiceboxStream.Stream.Server, as: Stream
   alias JuiceboxStream.Stream.Supervisor, as: StreamSupervisor
+  alias JuiceboxWeb.Reactions.Server, as: Reactions
 
   @stream_id "channel tests"
 
   defp setup_and_join_socket(_) do
     {:ok, _, socket} =
-      subscribe_and_join(socket, StreamChannel, "stream:" <> @stream_id)
-    {:ok, socket: socket}
+      subscribe_and_join(socket(), StreamChannel, "stream:" <> @stream_id)
+    {:ok, socket: socket, id: socket.assigns.user_id}
   end
 
   defp setup_stream(_) do
@@ -26,6 +27,20 @@ defmodule JuiceboxWeb.StreamChannelTest do
     Stream.add(@stream_id, %{video: video_2})
 
     {:ok, video_1: video_1, video_2: video_2}
+  end
+
+  def receive_reaction %{socket: socket} do
+    payload = %{"video" => "BASE64 VIDEO", "stream_id" => @stream_id}
+    ref = push(socket, "reaction.sent", payload)
+    assert_reply ref, :ok
+    :ok
+  end
+
+  def disconnect %{socket: socket} do
+    Process.unlink(socket.channel_pid)
+    ref = leave(socket)
+    assert_reply ref, :ok
+    :ok
   end
 
   describe "adding a video" do
@@ -77,44 +92,21 @@ defmodule JuiceboxWeb.StreamChannelTest do
     end
   end
 
-  describe "Connecting" do
-    setup [:with_some_reactions, :with_some_videos, :connect]
-
-    #test "pushes all current reactions", %{socket: socket} do
-    #  assert_push("remote.action", %{video: "video 1", user_id: "user 1", "type": "NEW_REACTION"})
-    #  assert_push("remote.action", %{video: "video 2", user_id: "user 2", "type": "NEW_REACTION"})
-    #  assert_push("remote.action", %{video: "video 3", user_id: "user 3", "type": "NEW_REACTION"})
-    #end
-
-    test "pushes the current queue" do
-      assert_push("remote.action", %{videos: [%{video: @vide}, %{video: @video_2}], "type": "QUEUE_UPDATED"})
-    end
-  end
-
-  describe "Videos" do
-    setup [:connect, :receive_video]
-
-    test "video.added (in): adds a video to the stream" do
-      assert Stream.playing(@stream_id) == {:ok, %{video: @video}}
-    end
-  end
-
   describe "Receiving a reaction" do
-    setup [:connect, :receive_reaction]
+    setup [:setup_stream, :setup_and_join_socket, :receive_reaction]
 
     test "adds a reaction to the stream", %{id: id} do
       assert Reactions.get(@stream_id, id) == "BASE64 VIDEO"
     end
 
-    test "broadcasts the new reaction to all clients",
-          %{socket: socket, reaction_payload: payload, id: id} do
-
-      assert_broadcast("remote.action", %{video: payload, user_id: id})
+    test "broadcasts the new reaction to all clients", %{id: id} do
+      payload = %{user_id: id, video: "BASE64 VIDEO", type: "NEW_REACTION"}
+      assert_broadcast "remote.action", payload
     end
   end
 
   describe "Disconnecting" do
-    setup [:connect, :receive_reaction, :disconnect]
+    setup [:setup_stream, :setup_and_join_socket, :receive_reaction, :disconnect]
 
     test "removes the user's reaction video", %{socket: socket} do
       video = Reactions.get(@stream_id, socket.assigns.user_id)
