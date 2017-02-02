@@ -1,10 +1,12 @@
 defmodule JuiceboxStream.Youtube.DummyAPI do
-  def search("bad") do
-    dummy_response(%{error: "Some API Error"})
+  @spec search(String.t, map) :: map
+  def search("bad", _) do
+    %{error: "Some API Error"}
   end
 
-  def search(_) do
-    dummy_response(%{
+  @spec search(any, any) :: map
+  def search(_, _) do
+    %{
       "items" => [
         %{
           "id" => %{
@@ -13,7 +15,6 @@ defmodule JuiceboxStream.Youtube.DummyAPI do
           "snippet" => %{
             "title" => "Dummy",
             "description" => "Video",
-            "duration" => 5000,
             "thumbnails" => %{
               "high" => %{
                 "url" => "test.jpg"
@@ -22,11 +23,18 @@ defmodule JuiceboxStream.Youtube.DummyAPI do
           }
         }
       ]
-    })
+    }
   end
 
-  defp dummy_response(map) do
-    {:ok, json} = Poison.encode(map)
-    {:ok, %{body: json}}
+  @spec videos(any, any) :: map
+  def videos(_, _) do
+    %{
+      "items" => [%{
+        "id" =>  1,
+        "contentDetails" => %{
+          "duration" => "PT1M32S"
+        }
+      }]
+    }
   end
 end

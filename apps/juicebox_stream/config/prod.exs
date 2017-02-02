@@ -14,15 +14,5 @@ config :juicebox_stream,
   :silence_time,
   String.to_integer(System.get_env("SILENCE_TIME")) # silence between tracks
 
-
 config :juicebox_stream, JuiceboxStream.Youtube,
-  api_key: System.get_env("YOUTUBE_API_KEY"),
-  api_url: "https://www.googleapis.com/youtube/v3/search",
-  search_params: %{
-    part: "snippet",
-    safeSearch: "strict",
-    type: "video",
-    videoCategoryId: "10", # music
-    order: "viewCount",
-    videoEmbeddable: "true"
-  }
+  api_key: System.get_env("YOUTUBE_API_KEY")

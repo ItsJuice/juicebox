@@ -7,7 +7,6 @@ import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import { createSocket, connectToChannel, subscribeToStream } from '../sockets';
 import rootReducer from './reducers';
-import { loadInitialState, queueUpdated } from '../videos/actions';
 
 const finalCreateStore = compose(
   applyMiddleware(
@@ -36,7 +35,7 @@ export default function configureStore(initialState) {
       [
         '../videos/reducers',
         '../reducers/index'
-      ], 
+      ],
       () => {
         const nextRootReducer = require('../reducers');
         store.replaceReducer(nextRootReducer);

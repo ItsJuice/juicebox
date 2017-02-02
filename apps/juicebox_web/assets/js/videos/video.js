@@ -20,7 +20,7 @@ class Video extends Component {
 
 Video.propTypes = {
   video: PropTypes.object,
-  playingStartTime: PropTypes.integer,
+  playingStartTime: PropTypes.number,
 }
 
 export default Video;

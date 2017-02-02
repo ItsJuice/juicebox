@@ -4,13 +4,14 @@ defmodule JuiceboxWeb.StreamChannelTest do
   alias JuiceboxWeb.StreamChannel
   alias JuiceboxStream.Stream.Server, as: Stream
   alias JuiceboxStream.Stream.Supervisor, as: StreamSupervisor
+  alias JuiceboxWeb.Reactions.Server, as: Reactions
 
   @stream_id "channel tests"
 
   defp setup_and_join_socket(_) do
     {:ok, _, socket} =
-      subscribe_and_join(socket, StreamChannel, "stream:" <> @stream_id)
-    {:ok, socket: socket}
+      subscribe_and_join(socket(), StreamChannel, "stream:" <> @stream_id)
+    {:ok, socket: socket, id: socket.assigns.user_id}
   end
 
   defp setup_stream(_) do
@@ -22,10 +23,24 @@ defmodule JuiceboxWeb.StreamChannelTest do
   defp add_videos_to_stream(_) do
     video_1 = %{id: "1111", duration: 30000}
     video_2 = %{id: "2222", duration: 30000}
-    Stream.add(@stream_id, %{ video: video_1 })
-    Stream.add(@stream_id, %{ video: video_2 })
+    Stream.add(@stream_id, %{video: video_1})
+    Stream.add(@stream_id, %{video: video_2})
 
     {:ok, video_1: video_1, video_2: video_2}
+  end
+
+  def receive_reaction %{socket: socket} do
+    payload = %{"video" => "BASE64 VIDEO", "stream_id" => @stream_id}
+    ref = push(socket, "reaction.sent", payload)
+    assert_reply ref, :ok
+    :ok
+  end
+
+  def disconnect %{socket: socket} do
+    Process.unlink(socket.channel_pid)
+    ref = leave(socket)
+    assert_reply ref, :ok
+    :ok
   end
 
   describe "adding a video" do
@@ -45,11 +60,11 @@ defmodule JuiceboxWeb.StreamChannelTest do
   describe "joining a channel with no existing videos" do
     setup [:setup_stream, :setup_and_join_socket]
     test "after joining it receives an empty queue", _ do
-      assert_push "remote.action", %{ videos: [], type: "QUEUE_UPDATED" }
+      assert_push "remote.action", %{videos: [], type: "QUEUE_UPDATED"}
     end
 
     test "after joining it does not receive the playing video", _ do
-      refute_push "remote.action", %{ playing: _, type: "PLAYING_CHANGED", time: _ }
+      refute_push "remote.action", %{playing: _, type: "PLAYING_CHANGED", time: _}
     end
   end
 
@@ -57,12 +72,12 @@ defmodule JuiceboxWeb.StreamChannelTest do
     setup [:setup_stream, :add_videos_to_stream, :setup_and_join_socket]
 
     test "after joining it receives the proper queue", %{video_2: video_2} do
-      expected_queue_response = %{ videos: [ video_2 ], type: "QUEUE_UPDATED" }
+      expected_queue_response = %{videos: [video_2], type: "QUEUE_UPDATED"}
       assert_push "remote.action", expected_queue_response
     end
-    
+
     test "after joining it receives the currently playing video", %{video_1: video_1} do
-      assert_push "remote.action", %{ playing: %{ video: video_1 }, type: "PLAYING_CHANGED", time: _ }
+      assert_push "remote.action", %{playing: %{video: video_1}, type: "PLAYING_CHANGED", time: _}
     end
   end
 
@@ -76,4 +91,33 @@ defmodule JuiceboxWeb.StreamChannelTest do
       assert_broadcast "remote.action", payload
     end
   end
+
+  describe "Receiving a reaction" do
+    setup [:setup_stream, :setup_and_join_socket, :receive_reaction]
+
+    test "adds a reaction to the stream", %{id: id} do
+      assert Reactions.get(@stream_id, id) == "BASE64 VIDEO"
+    end
+
+    test "broadcasts the new reaction to all clients", %{id: id} do
+      payload = %{user_id: id, video: "BASE64 VIDEO", type: "NEW_REACTION"}
+      assert_broadcast "remote.action", payload
+    end
+  end
+
+  describe "Disconnecting" do
+    setup [:setup_stream, :setup_and_join_socket, :receive_reaction, :disconnect]
+
+    test "removes the user's reaction video", %{socket: socket} do
+      video = Reactions.get(@stream_id, socket.assigns.user_id)
+      assert video == nil
+    end
+
+    test "tells all clients to remove the reaction by broadcasting an empty reaction video",
+          %{socket: socket} do
+
+      assert_broadcast("remote.action", %{video: nil, user_id: id})
+    end
+  end
+
 end

@@ -9,6 +9,8 @@ defmodule JuiceboxWeb do
     children = [
       # Start the endpoint when the application starts
       supervisor(JuiceboxWeb.Endpoint, []),
+      supervisor(JuiceboxWeb.Presence, []),
+      worker(JuiceboxWeb.Reactions.Supervisor, []),
       # Start the Ecto repository
       worker(JuiceboxWeb.Repo, []),
       # Here you could define other workers and supervisors as children

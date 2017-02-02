@@ -1,25 +1,45 @@
 defmodule JuiceboxStream.Youtube.Client do
   @youtube_api Application.get_env(:juicebox_stream, :youtube_api)
 
+  @search_params %{
+    part: "snippet",
+    safeSearch: "strict",
+    type: "video",
+    videoCategoryId: "10", # music
+    order: "viewCount",
+    videoEmbeddable: "true"
+  }
+
   def search(query) do
-    with {:ok, response} <- @youtube_api.search(query),
-         parsed = parse_response(response),
-         do: format_response(parsed)
+    case @youtube_api.search(query, @search_params) do
+      %{"items" => videos} ->
+        results = fetch_video_meta_data(videos)
+        |> merge_responses(videos)
+        |> Enum.map(&format_video/1)
+
+        {:ok, results}
+      _ -> {:error, nil}
+    end
   end
 
-  defp parse_response(%{body: body}) do
-    Poison.Parser.parse!(body)
+  defp merge_responses(videos_meta, videos) do
+    Enum.map(videos, fn(video) ->
+      meta = Enum.find(videos_meta, &(&1["id"] == video["id"]["videoId"]))
+
+      %{
+         video: video,
+         meta: meta
+       }
+    end)
   end
 
-  defp format_response(%{"items" => items}) do
-    {:ok, Enum.map(items, &format_video/1)}
+  defp fetch_video_meta_data(videos) do
+    Enum.map(videos, &(&1["id"]["videoId"]))
+    |> @youtube_api.videos(%{part: "contentDetails"})
+    |> Map.get("items")
   end
 
-  defp format_response(%{"error" => error}) do
-    {:error, error}
-  end
-
-  defp format_video(video) do
+  defp format_video(%{video: video, meta: meta}) do
     %{
       "id" => %{
         "videoId" => video_id
@@ -27,7 +47,6 @@ defmodule JuiceboxStream.Youtube.Client do
       "snippet" => %{
         "title" => title,
         "description" => description,
-        "duration" => duration,
         "thumbnails" => %{
           "high" => %{
             "url" => thumbnail
@@ -36,11 +55,17 @@ defmodule JuiceboxStream.Youtube.Client do
       }
     } = video
 
+    %{
+      "contentDetails" => %{
+        "duration" => duration
+      }
+    } = meta
+
     %JuiceboxStream.Youtube.Video{
        video_id: video_id,
        title: title,
+       duration: JuiceboxStream.Youtube.Time.parse(duration) * 1000,
        description: description,
-       duration: duration,
        thumbnail: thumbnail
      }
   end
