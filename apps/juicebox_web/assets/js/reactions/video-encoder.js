@@ -9,7 +9,7 @@ class VideoEncoder {
 
   encode(cb) {
     const blob = new Blob(this.chunks, { type: 'video/webm' });
-    const reader  = new FileReader();
+    const reader = new FileReader();
 
     reader.addEventListener('load', () => cb(reader.result), false);
     reader.readAsDataURL(blob);

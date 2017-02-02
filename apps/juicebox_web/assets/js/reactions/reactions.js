@@ -25,7 +25,10 @@ class Reactions extends Component {
 }
 
 Reactions.propTypes = {
-  reactions: PropTypes.array,
+  reactions: PropTypes.shape({
+    video: PropTypes.string,
+    userId: PropTypes.string,
+  }),
 };
 
 function _send(video) {

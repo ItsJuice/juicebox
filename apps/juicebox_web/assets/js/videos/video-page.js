@@ -29,7 +29,7 @@ VideoPage.propTypes = {
   queue: PropTypes.array,
   playing: PropTypes.object,
   streamId: PropTypes.string.isRequired,
-  playingStartTime: PropTypes.integer,
+  playingStartTime: PropTypes.number,
 };
 
 function mapStateToProps( { videos, router } ) {
