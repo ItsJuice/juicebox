@@ -7,8 +7,9 @@ function getMimeType() {
   }
 
   const mimeType = [
-    'video/webm;codecs=h264',
-    'video/webm;codecs=vp9',
+// Force vp8 for chrome & firefox support
+//    'video/webm;codecs=h264',
+//    'video/webm;codecs=vp9',
     'video/webm;codecs=vp8',
   ].find(MediaRecorder.isTypeSupported);
 
