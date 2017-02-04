@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import { delay } from 'lodash';
 import VideoEncoder from './video-encoder';
 import Webcam from './webcam';
+import show from '../lib/show-when';
 
 const webcam = new Webcam();
 
@@ -12,16 +13,32 @@ class ReactionRecorder extends Component {
     super();
     this.webcam = new Webcam();
     this.state = {
-      webcamConnected: false,
+      isConnected: false,
       isRecording: false,
       video: null,
       stream: null,
     }
   }
 
+  startButton = () =>
+    <button onClick={this.startWebcam}>Record a reaction</button>
+
+  stopButton = () =>
+    <button onClick={this.stopWebcam}>&times;</button>
+
+  recordButton = () =>
+    <button onClick={this.record}>Record</button>
+
+  clearButton = () =>
+    <button onClick={this.clearRecording}>Clear</button>
+
+  sendButton = () =>
+    <button onClick={this.send}>Send</button>
+
+
   render() {
     const {
-      webcamConnected,
+      isConnected,
       video,
       stream,
       isRecording,
@@ -30,38 +47,40 @@ class ReactionRecorder extends Component {
     return (
       <div className="reaction-recorder">
         <div className={`webcam
-          ${!webcamConnected ? 'offline' : ''}
+          ${!isConnected ? 'offline' : ''}
           ${isRecording ? 'recording' : ''}`}>
-          { webcamConnected && <button onClick={this.stopWebcam}>&times;</button> }
+
+          { show(this.stopButton).when(isConnected) }
           <video src={video || stream} loop autoPlay></video>
+
           <div className="recorder-controls">
-            { !webcamConnected && <button onClick={this.startWebcam}>Record a reaction</button> }
-            { (webcamConnected && !video && !isRecording) && <button onClick={this.record}>Record</button> }
-            { (webcamConnected && video) && <button onClick={this.clearRecording}>Clear</button> }
-            { video && <button onClick={this.send}>Send</button> }
+            { show(this.startButton).when(!isConnected) }
+            { show(this.recordButton).when(isConnected && !video && !isRecording) }
+            { show(this.clearButton).when(isConnected && video) }
+            { show(this.sendButton).when(video) }
           </div>
         </div>
       </div>
     );
   }
 
-  webcamConnected = (stream) => {
+  isConnected = (stream) => {
     this.setState({
       stream,
-      webcamConnected: true
+      isConnected: true
     });
   }
 
   startWebcam = () => {
     this.webcam.connect()
-      .then(this.webcamConnected);
+      .then(this.isConnected);
   }
 
   stopWebcam = () => {
     this.webcam.disconnect();
 
     this.setState({
-      webcamConnected: false,
+      isConnected: false,
       video: null,
     });
   }
