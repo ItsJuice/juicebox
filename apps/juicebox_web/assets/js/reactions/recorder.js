@@ -13,34 +13,41 @@ class ReactionRecorder extends Component {
     this.webcam = new Webcam();
     this.state = {
       webcamConnected: false,
-      recording: null,
+      isRecording: false,
+      video: null,
+      stream: null,
     }
   }
 
   render() {
-    const { webcamConnected, recording } = this.state;
+    const {
+      webcamConnected,
+      video,
+      stream,
+      isRecording,
+    } = this.state;
 
     return (
-      <div>
-        <video ref={(video) => this.video = video} loop></video>
-        { webcamConnected ? (
-            <button onClick={this.stopWebcam}>Disconnect</button>
-        ) : (
-            <button onClick={this.startWebcam}>Record a reaction</button>
-        )}
-
-        { (webcamConnected && !recording) && <button onClick={this.record}>Record</button> }
-        { (webcamConnected && recording) && <button onClick={this.clearRecording}>Clear</button> }
-        { recording && <button onClick={this.send}>Send</button> }
+      <div className="reaction-recorder">
+        <div className={`webcam
+          ${!webcamConnected ? 'offline' : ''}
+          ${isRecording ? 'recording' : ''}`}>
+          { webcamConnected && <button onClick={this.stopWebcam}>&times;</button> }
+          <video src={video || stream} loop autoPlay></video>
+          <div className="recorder-controls">
+            { !webcamConnected && <button onClick={this.startWebcam}>Record a reaction</button> }
+            { (webcamConnected && !video && !isRecording) && <button onClick={this.record}>Record</button> }
+            { (webcamConnected && video) && <button onClick={this.clearRecording}>Clear</button> }
+            { video && <button onClick={this.send}>Send</button> }
+          </div>
+        </div>
       </div>
     );
   }
 
-  webcamConnected = (streamURL) => {
-    this.video.src = streamURL;
-    this.video.play();
-
+  webcamConnected = (stream) => {
     this.setState({
+      stream,
       webcamConnected: true
     });
   }
@@ -52,46 +59,45 @@ class ReactionRecorder extends Component {
 
   stopWebcam = () => {
     this.webcam.disconnect();
-    this.video.src = '';
 
     this.setState({
-      webcamConnected: false
+      webcamConnected: false,
+      video: null,
     });
   }
 
   preview = (video) => {
-    this.video.src = video;
-    this.video.play();
-
-    this.setState({
-      recording: video
-    });
+    this.setState({ video });
   }
 
   send = () => {
-    this.props.onRecord(this.state.recording);
+    this.props.onRecord(this.state.video);
     this.stopWebcam();
     this.setState({
-      recording: null
+      video: null
     });
   }
 
   record = () => {
     const recording = this.webcam.record();
+    this.setState({ isRecording: true });
 
     delay(() => {
       recording.stop()
-        .then(this.preview)
+        .then(this.stopRecording)
     }, 2500);
+  }
+
+  stopRecording = (video) => {
+    this.setState({ isRecording: false });
+    this.preview(video);
   }
 
   clearRecording = () => {
     this.setState({
-      recording: null
+      video: null
     });
-    this.startWebcam();
   }
-
 }
 
 ReactionRecorder.propTypes = {
