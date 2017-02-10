@@ -64,7 +64,7 @@ class ReactionRecorder extends Component {
     );
   }
 
-  isConnected = (stream) => {
+  onConnect = (stream) => {
     this.setState({
       stream,
       isConnected: true
@@ -73,7 +73,7 @@ class ReactionRecorder extends Component {
 
   startWebcam = () => {
     this.webcam.connect()
-      .then(this.isConnected);
+      .then(this.onConnect);
   }
 
   stopWebcam = () => {
