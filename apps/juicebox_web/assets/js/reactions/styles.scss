@@ -56,3 +56,13 @@
     margin: 0 10px;
   }
 }
+
+.video-frame {
+  canvas {
+    width: 100%;
+  }
+
+  video {
+    display: none;
+  }
+}
