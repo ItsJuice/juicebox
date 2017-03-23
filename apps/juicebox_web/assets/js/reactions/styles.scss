@@ -13,3 +13,46 @@
     }
   }
 }
+
+.reaction-recorder {
+  .webcam {
+    width: 15%;
+
+    video {
+      width: 100%;
+    }
+
+    &.offline {
+      video {
+        display: none;
+      }
+    }
+
+    &::after {
+      content: ' ';
+      display: block;
+      visibility: hidden;
+      background-color: red;
+      width: 0;
+      height: 2px;
+      transition: width 2.5s;
+      transition-timing-function: linear;
+    }
+
+    &.recording {
+      &::after {
+        visibility: visible;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.recorder-controls {
+  display: flex;
+
+  button {
+    flex: 1;
+    margin: 0 10px;
+  }
+}
