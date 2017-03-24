@@ -1,16 +1,16 @@
 import React, { Component, PropTypes } from 'react';
-const frameAsset = require.context('../../images/frames', false);
+import { frameAssets } from './frames';
 
-const image = (src) => {
-  const img = new Image();
-  img.src = src;
-  return img;
+function drawVideo(ctx, video, targetWidth, targetHeight) {
+  const videoAspectRatio = video.videoWidth / video.videoHeight;
+  const height = targetHeight;
+  const width = height * videoAspectRatio;
+
+  const x = (targetWidth / 2) - (width / 2);
+  const y = (targetHeight / 2) - (height / 2);
+
+  ctx.drawImage(video, x, y, width, height);
 }
-
-const frameAssets = (name) => ({
-  border: image(frameAsset(`./${name}.svg`)),
-  mask: image(frameAsset(`./${name}-mask.svg`)),
-});
 
 class VideoFrame extends Component {
   constructor(props) {
@@ -19,6 +19,7 @@ class VideoFrame extends Component {
   }
 
   componentDidMount() {
+    this.ctx = this.canvas.getContext('2d');
     this.renderFrame();
   }
 
@@ -28,34 +29,21 @@ class VideoFrame extends Component {
   }
 
   renderFrame() {
-    const ctx = this.canvas.getContext('2d');
-    const { border, mask } = frameAssets(this.props.frame);
+    const { frame, mask } = frameAssets(this.props.frame);
+    const frameAspectRatio = (frame.naturalHeight / frame.naturalWidth);
+    const width = this.canvas.offsetWidth;
+    const height = width * frameAspectRatio;
 
-    const {
-      naturalWidth: borderWidth,
-      naturalHeight: borderHeight,
-    } = border;
+    this.resize(width, height);
 
-    this.resize(borderWidth, borderHeight);
+    this.ctx.drawImage(mask, 0, 0, width, height);
 
-    let { videoWidth, videoHeight } = this.video;
-    const videoAspect = videoWidth / videoHeight;
+    this.ctx.save();
+      this.ctx.globalCompositeOperation = 'source-in';
+      drawVideo(this.ctx, this.video, width, height);
+    this.ctx.restore();
 
-    videoHeight = borderHeight;
-    videoWidth = borderHeight * videoAspect;
-
-    ctx.drawImage(mask, 0, 0, borderWidth, borderHeight);
-
-    ctx.save();
-      const videoX = (borderWidth / 2) - (videoWidth / 2);
-      const videoY = (borderHeight / 2) - (videoHeight / 2);
-
-      ctx.globalCompositeOperation = 'source-in';
-      ctx.translate(videoX, videoY);
-      ctx.drawImage(this.video, 0, 0, videoWidth, videoHeight);
-    ctx.restore();
-
-    ctx.drawImage(border, 0, 0, borderWidth, borderHeight);
+    this.ctx.drawImage(frame, 0, 0, width, height);
 
     window.requestAnimationFrame(this.renderFrame);
   }

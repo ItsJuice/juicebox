@@ -7,7 +7,10 @@ function reactions(state = {}, action = {}) {
       return Object.assign({},
          omit(state, action.user_id),
          action.video && {
-           [action.user_id]: action.video
+           [action.user_id]: {
+             video: action.video,
+             frame: action.frame,
+           }
          });
     default:
       return state;

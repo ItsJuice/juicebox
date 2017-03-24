@@ -51,7 +51,7 @@ class ReactionRecorder extends Component {
           ${isRecording ? 'recording' : ''}`}>
 
           { show(this.stopButton).when(isConnected) }
-          <VideoFrame src={video || stream} frame="frame-2" />
+          <VideoFrame src={video || stream} frame={ this.props.frame } />
 
           <div className="recorder-controls">
             { show(this.startButton).when(!isConnected) }
