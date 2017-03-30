@@ -2,7 +2,7 @@ const SEND_REACTION = 'SEND_REACTION';
 const NEW_REACTION = 'NEW_REACTION';
 const NEXT_REACTION = 'NEXT_REACTION';
 
-function sendReaction({ streamId, video }) {
+function sendReaction({ streamId, video, frame }) {
   return {
     type: SEND_REACTION,
     socketData: {
@@ -10,6 +10,7 @@ function sendReaction({ streamId, video }) {
       payload: {
         video: video,
         stream_id: streamId,
+        frame: frame,
       }
     }
   }

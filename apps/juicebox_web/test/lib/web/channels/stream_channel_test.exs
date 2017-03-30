@@ -21,8 +21,8 @@ defmodule JuiceboxWeb.StreamChannelTest do
   end
 
   defp add_videos_to_stream(_) do
-    video_1 = %{id: "1111", duration: 30000}
-    video_2 = %{id: "2222", duration: 30000}
+    video_1 = %{id: "1111", duration: 30_000}
+    video_2 = %{id: "2222", duration: 30_000}
     Stream.add(@stream_id, %{video: video_1})
     Stream.add(@stream_id, %{video: video_2})
 
@@ -30,7 +30,7 @@ defmodule JuiceboxWeb.StreamChannelTest do
   end
 
   def receive_reaction %{socket: socket} do
-    payload = %{"video" => "BASE64 VIDEO", "stream_id" => @stream_id}
+    payload = %{"video" => "BASE64 VIDEO", "stream_id" => @stream_id, "frame" => "frame-1"}
     ref = push(socket, "reaction.sent", payload)
     assert_reply ref, :ok
     :ok
@@ -46,7 +46,7 @@ defmodule JuiceboxWeb.StreamChannelTest do
   describe "adding a video" do
     setup [:setup_stream, :setup_and_join_socket]
 
-    @video %{id: "2222", duration: 30000}
+    @video %{id: "2222", duration: 30_000}
     @payload %{"video" => @video, "stream_id" => @stream_id}
 
     test "adding a video", %{socket: socket} do
@@ -85,7 +85,7 @@ defmodule JuiceboxWeb.StreamChannelTest do
     setup [:setup_stream, :setup_and_join_socket]
     test "after receiving a message with a type key it broadcasts it", %{socket: socket} do
       payload = %{type: 'TEST_TYPE', some_payload: 'some_values'}
-      Phoenix.PubSub.broadcast(JuiceboxStream.PubSub, 
+      Phoenix.PubSub.broadcast(JuiceboxStream.PubSub,
                                "juicebox:stream:server:" <> @stream_id,
                                payload)
       assert_broadcast "remote.action", payload
@@ -96,11 +96,11 @@ defmodule JuiceboxWeb.StreamChannelTest do
     setup [:setup_stream, :setup_and_join_socket, :receive_reaction]
 
     test "adds a reaction to the stream", %{id: id} do
-      assert Reactions.get(@stream_id, id) == "BASE64 VIDEO"
+      assert Reactions.get(@stream_id, id) == %{video: "BASE64 VIDEO", frame: "frame-1"}
     end
 
     test "broadcasts the new reaction to all clients", %{id: id} do
-      payload = %{user_id: id, video: "BASE64 VIDEO", type: "NEW_REACTION"}
+      payload = %{user_id: id, video: "BASE64 VIDEO", type: "NEW_REACTION", frame: "frame-1"}
       assert_broadcast "remote.action", payload
     end
   end

@@ -3,6 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import { delay } from 'lodash';
 import VideoEncoder from './video-encoder';
+import VideoFrame from './video-frame';
 import Webcam from './webcam';
 import show from '../lib/show-when';
 
@@ -35,7 +36,6 @@ class ReactionRecorder extends Component {
   sendButton = () =>
     <button onClick={this.send}>Send</button>
 
-
   render() {
     const {
       isConnected,
@@ -51,7 +51,7 @@ class ReactionRecorder extends Component {
           ${isRecording ? 'recording' : ''}`}>
 
           { show(this.stopButton).when(isConnected) }
-          <video src={video || stream} loop autoPlay></video>
+          <VideoFrame src={video || stream} frame={ this.props.frame } />
 
           <div className="recorder-controls">
             { show(this.startButton).when(!isConnected) }

@@ -35,10 +35,10 @@ defmodule JuiceboxWeb.StreamChannel do
   end
 
   @spec handle_in(String.t, map, Socket.t) :: {:reply, atom, Socket.t}
-  def handle_in("reaction.sent", %{"stream_id" => stream_id, "video" => video}, socket) do
-    Reactions.put(stream_id, socket.assigns.user_id, video)
+  def handle_in("reaction.sent", %{"stream_id" => stream_id, "video" => video, "frame" => frame}, socket) do
+    Reactions.put(stream_id, socket.assigns.user_id, %{video: video, frame: frame})
 
-    broadcast_reaction(socket, %{video: video, user_id: socket.assigns.user_id})
+    broadcast_reaction(socket, %{video: video, user_id: socket.assigns.user_id, frame: frame})
 
     {:reply, :ok, socket}
   end
@@ -59,8 +59,8 @@ defmodule JuiceboxWeb.StreamChannel do
     })
 
     Reactions.all(stream_id)
-    |> Enum.each(fn({user_id, video}) -> {
-      push_reaction(socket, %{user_id: user_id, video: video})
+    |> Enum.each(fn({user_id, %{video: video, frame: frame}}) -> {
+      push_reaction(socket, %{user_id: user_id, video: video, frame: frame})
     } end)
 
     {:ok, queue} = Stream.queue(stream_id)

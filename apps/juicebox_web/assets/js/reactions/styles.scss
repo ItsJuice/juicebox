@@ -1,22 +1,15 @@
 .reactions {
-  display: flex;
   width: 100%;
-  justify-content: center;
 
-  video {
-    flex: 1 0 0;
-    width: 0;
-    transition: all .3s;
-
-    &.new-reaction {
-      transform: translateY(-20px);
-    }
+  .video-frame {
+    display: inline-block;
+    width: 200px;
   }
 }
 
 .reaction-recorder {
   .webcam {
-    width: 15%;
+    width: 200px;
 
     video {
       width: 100%;
@@ -54,5 +47,30 @@
   button {
     flex: 1;
     margin: 0 10px;
+  }
+}
+
+.video-frame {
+  canvas {
+    width: 100%;
+  }
+
+  video {
+    display: none;
+  }
+}
+
+.frame-selector {
+  list-style: none;
+
+  li {
+    display: inline-block;
+    width: 100px;
+    margin: 0 10px;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+    }
   }
 }
