@@ -50,7 +50,7 @@ class VideoFrame extends Component {
 
   render() {
     return (
-      <div className="video-frame">
+      <div className={ this.props.className }>
         <canvas ref={ (canvas) => { this.canvas = canvas } }></canvas>
         <video
           autoPlay
@@ -66,6 +66,7 @@ class VideoFrame extends Component {
 VideoFrame.propTypes = {
   src: PropTypes.string,
   frame: PropTypes.string,
+  className: PropTypes.string
 };
 
 export default VideoFrame;

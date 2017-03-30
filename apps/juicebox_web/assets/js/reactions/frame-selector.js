@@ -17,7 +17,7 @@ class FrameSelector extends Component {
 
   render() {
     return (
-      <ul className="frame-selector">
+      <ul className={ this.props.className }>
         { this.renderFrames() }
       </ul>
     );
@@ -26,6 +26,7 @@ class FrameSelector extends Component {
 
 FrameSelector.propTypes = {
   onChange: PropTypes.func,
+  className: PropTypes.string,
 };
 
 export default FrameSelector;

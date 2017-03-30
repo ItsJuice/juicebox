@@ -44,16 +44,18 @@ class ReactionRecorder extends Component {
       isRecording,
     } = this.state;
 
+    const { styles } = this.props;
+
     return (
       <div className="reaction-recorder">
-        <div className={`webcam
-          ${!isConnected ? 'offline' : ''}
-          ${isRecording ? 'recording' : ''}`}>
+        <div className={ `${ styles.webcam }
+          ${!isConnected ? styles.offline : ''}
+          ${isRecording ? styles.recording : ''} `}>
 
           { show(this.stopButton).when(isConnected) }
           <VideoFrame src={video || stream} frame={ this.props.frame } />
 
-          <div className="recorder-controls">
+          <div className={ styles['recorder-controls'] }>
             { show(this.startButton).when(!isConnected) }
             { show(this.recordButton).when(isConnected && !video && !isRecording) }
             { show(this.clearButton).when(isConnected && video) }
@@ -121,6 +123,7 @@ class ReactionRecorder extends Component {
 
 ReactionRecorder.propTypes = {
   onRecord: PropTypes.func,
+  styles: PropTypes.object,
 };
 
 export default ReactionRecorder;

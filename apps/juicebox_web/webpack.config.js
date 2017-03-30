@@ -31,7 +31,7 @@ module.exports = {
       loader: 'url-loader?limit=8192&name=./images/[hash].[ext]'
     }, {
       test: /\.(svg)$/,
-      loader: `file?name=/images/[hash].[ext]`,
+      loader: `file-loader?name=/images/[hash].[ext]`,
     }]
   },
 
