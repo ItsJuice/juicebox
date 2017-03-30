@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Video from './video';
 import Search from '../search/search';
-import { addVideo } from './actions';
-import VideoList from './video-list';
 import Reactions from '../reactions/reactions';
+import { addVideo } from './actions';
+import Video from './video';
+import VideoList from './video-list';
 import './styles.scss';
 
 class VideoPage extends Component {

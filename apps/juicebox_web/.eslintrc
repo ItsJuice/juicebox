@@ -26,6 +26,7 @@
   },
   "globals": {
     "__": true,
-    "__DEV__": true
+    "__DEV__": true,
+    "__ROOTPATH__": true
   }
 }

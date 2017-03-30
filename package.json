@@ -8,8 +8,5 @@
   "scripts": {
     "postinstall": "cd apps/juicebox_web && npm install",
     "test": "cd apps/juicebox_web && npm test"
-  },
-  "dependencies": {
-    "redux-thunk": "^2.1.0"
   }
 }

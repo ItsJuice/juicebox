@@ -1,10 +1,18 @@
 import React from 'react';
-import { Route } from 'react-router';
-import AppContent from './containers/app-content';
-import VideoPage from './videos/video-page';
+import { Router, Route } from 'react-router';
+import { Container } from './container';
+import { VideoPage } from './videos';
 
-export default (
-  <Route path="/" component={AppContent}>
-    <Route path="stream/:streamId" component={VideoPage} />
-  </Route>
-);
+function AppRouter( { history } ) {
+  return  <Router history={ history }>
+            <Container>
+              <Route path="/stream/:streamId" component={ VideoPage } />
+            </Container>
+          </Router>
+}
+
+AppRouter.propTypes = {
+  history: React.PropTypes.object
+}
+
+export default AppRouter;
