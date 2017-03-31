@@ -28,15 +28,18 @@ class Reactions extends Component {
   render() {
     return (
       <div>
-        <ReactionRecorder
-          onRecord={ this.send }
-          frame={ this.state.frame }
-          styles={ styles }
-        />
-        <FrameSelector onChange={ this.onFrameChange }
-                       className={ styles['frame-selector'] } />
-        <div className={ styles.reactions }>
-          { this.reactions() }
+        <h2>Reactions</h2>
+        <div className={ styles['reactions-container']}>
+          <ReactionRecorder
+            onRecord={ this.send }
+            frame={ this.state.frame }
+            styles={ styles }
+          />
+          <FrameSelector onChange={ this.onFrameChange }
+                         className={ styles['frame-selector'] } />
+          <div className={ styles.reactions }>
+            { this.reactions() }
+          </div>
         </div>
       </div>
     );

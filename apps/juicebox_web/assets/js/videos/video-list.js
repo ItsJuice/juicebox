@@ -5,12 +5,10 @@ class VideoList extends Component {
   render() {
     const videos = this.props.videos;
 
-    if (!videos) { return null; }
-
     return (
       <div className="video-list">
-        <h2>Videos</h2>
-        {videos.map(({video}, index) => <VideoPlaceholder key={index} video={video} />)}
+        <h2>Up next</h2>
+        {videos && videos.map(({video}, index) => <VideoPlaceholder key={index} video={video} />)}
       </div>
     );
   }

@@ -13,7 +13,6 @@ class ResultList extends Component {
   render() {
     return (
       <div className="result-list">
-        <h2>Results</h2>
         <ul>
           {this.results().map(result => <Result result={result} onSelect={ this.props.onSelect } />)}
         </ul>

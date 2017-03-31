@@ -1,18 +1,25 @@
 import React, { Component, PropTypes } from 'react';
+import styles from './video.scss';
 
 class Video extends Component {
-  render() {
-    if (!this.props.video) { return null; }
 
-    return (
-      <div className="video" style={{display: 'inline-block'}}>
-        <iframe width="280"
+  renderVideo() {
+    if (!this.props.video) { return; }
+
+    return <iframe width="280"
                 height="157"
                 src={`https://www.youtube.com/embed/${this.props.video.video_id}?autoplay=1&start=${this.props.playingStartTime}`}
                 frameBorder="0"
-                allowFullScreen>
+                allowFullScreen></iframe>
+  }
 
-        </iframe>
+  render() {
+    return (
+      <div className={ styles.video }>
+        <h2>Now playing</h2>
+        <div className={ styles['video-wrapper'] }>
+          { this.renderVideo() }
+        </div>
       </div>
     );
   }

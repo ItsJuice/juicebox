@@ -31,7 +31,15 @@ module.exports = {
       loader: 'url-loader?limit=8192&name=./images/[hash].[ext]'
     }, {
       test: /\.(svg)$/,
+      include: path.join(__dirname, 'assets/images'),
       loader: `file-loader?name=/images/[hash].[ext]`,
+    }, {
+      test: /\.svg$/,
+      exclude: path.join(__dirname, 'assets/images'),
+      loaders: [
+        'babel-loader',
+        'svg-react-loader'
+      ]
     }]
   },
 
