@@ -29,6 +29,7 @@ function createSocket(socket = newSocket()) {
     return next => action => {
       const { socketData } = action;
 
+      console.log(action);
       switch(action.type) {
         case CONNECT_TO_CHANNEL:
           channel && channel.leave();

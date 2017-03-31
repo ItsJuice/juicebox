@@ -3,6 +3,7 @@ import { createLogger } from 'redux-logger';
 import { routerMiddleware } from 'react-router-redux';
 import thunk from 'redux-thunk';
 import history from './utils/browser-history';
+import { createSocket } from './sockets';
 
 function devMiddleware(middleware, args = []) {
   if (__DEV__) {
@@ -15,6 +16,7 @@ function devMiddleware(middleware, args = []) {
 const enhancedCreateStore = compose(
   applyMiddleware(
     thunk,
+    createSocket(),
     routerMiddleware(history),
     devMiddleware(createLogger)
   )
