@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import styles from './results.scss';
 
 class Result extends Component {
   constructor(props) {
@@ -11,8 +12,6 @@ class Result extends Component {
   }
 
   render() {
-    const { styles } = this.props;
-
     return (
       <div className={ styles.result }>
         <li onClick={this.select}>
@@ -30,7 +29,6 @@ Result.propTypes = {
     thumbnail: PropTypes.thumbnail,
   }),
   onSelect: PropTypes.func,
-  styles: PropTypes.object,
 };
 
 export default Result;

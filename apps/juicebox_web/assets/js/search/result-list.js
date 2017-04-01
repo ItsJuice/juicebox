@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Result from './result';
+import styles from './results.scss';
 
 class ResultList extends Component {
   constructor(props) {
@@ -11,8 +12,6 @@ class ResultList extends Component {
   }
 
   render() {
-    const { styles } = this.props;
-
     return (
       <div className={ styles['result-list'] }>
         <ul>
@@ -20,8 +19,7 @@ class ResultList extends Component {
             this.results().map(result =>
               <Result result={result}
                       onSelect={ this.props.onSelect }
-                      key={ result.video_id }
-                      styles={ styles }/>)
+                      key={ result.video_id } />)
           }
         </ul>
       </div>
@@ -32,7 +30,6 @@ class ResultList extends Component {
 ResultList.propTypes = {
   onSelect: PropTypes.func,
   results: PropTypes.array,
-  styles: PropTypes.object,
 };
 
 export default ResultList;

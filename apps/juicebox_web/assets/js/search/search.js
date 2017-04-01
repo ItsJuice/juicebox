@@ -23,7 +23,7 @@ class Search extends Component {
     return (
       <div className={ styles.search }>
         <SearchBar receiveTerm={this.props.receiveTerm} />
-        <ResultList results={this.props.results} onSelect={ this.handleVideoAdded } styles={ styles } />
+        <ResultList results={this.props.results} onSelect={ this.handleVideoAdded } />
       </div>
     );
   }
