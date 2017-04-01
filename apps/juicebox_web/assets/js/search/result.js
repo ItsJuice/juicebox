@@ -11,11 +11,13 @@ class Result extends Component {
   }
 
   render() {
+    const { styles } = this.props;
+
     return (
-      <div className="result">
+      <div className={ styles.result }>
         <li onClick={this.select}>
-          <div>{this.props.result.title}</div>
-          <div>{this.props.result.thumbnail}</div>
+          <img src={this.props.result.thumbnail} />
+          <span>{this.props.result.title}</span>
         </li>
       </div>
     );
@@ -28,6 +30,7 @@ Result.propTypes = {
     thumbnail: PropTypes.thumbnail,
   }),
   onSelect: PropTypes.func,
+  styles: PropTypes.object,
 };
 
 export default Result;

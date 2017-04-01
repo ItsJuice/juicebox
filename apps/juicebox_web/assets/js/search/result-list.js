@@ -11,14 +11,17 @@ class ResultList extends Component {
   }
 
   render() {
+    const { styles } = this.props;
+
     return (
-      <div className="result-list">
+      <div className={ styles['result-list'] }>
         <ul>
           {
             this.results().map(result =>
               <Result result={result}
                       onSelect={ this.props.onSelect }
-                      key={ result.video_id } />)
+                      key={ result.video_id }
+                      styles={ styles }/>)
           }
         </ul>
       </div>
@@ -29,6 +32,7 @@ class ResultList extends Component {
 ResultList.propTypes = {
   onSelect: PropTypes.func,
   results: PropTypes.array,
+  styles: PropTypes.object,
 };
 
 export default ResultList;
