@@ -29,15 +29,14 @@ function createSocket(socket = newSocket()) {
     return next => action => {
       const { socketData } = action;
 
-      console.log(action);
       switch(action.type) {
         case CONNECT_TO_CHANNEL:
           channel && channel.leave();
           channel = connect(socket, action.channel);
           channel.on('remote.action', action => dispatch(action));
+          break;
         default:
           if (socketData) {
-            console.log(socketData);
             channel && channel.push(socketData.event, socketData.payload);
             action = omit(action, 'socketData');
           }
