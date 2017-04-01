@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Result from './result';
+import styles from './results.scss';
 
 class ResultList extends Component {
   constructor(props) {
@@ -12,7 +13,7 @@ class ResultList extends Component {
 
   render() {
     return (
-      <div className="result-list">
+      <div className={ styles['result-list'] }>
         <ul>
           {
             this.results().map(result =>

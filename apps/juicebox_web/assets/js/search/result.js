@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import styles from './results.scss';
 
 class Result extends Component {
   constructor(props) {
@@ -12,10 +13,10 @@ class Result extends Component {
 
   render() {
     return (
-      <div className="result">
+      <div className={ styles.result }>
         <li onClick={this.select}>
-          <div>{this.props.result.title}</div>
-          <div>{this.props.result.thumbnail}</div>
+          <img src={this.props.result.thumbnail} />
+          <span>{this.props.result.title}</span>
         </li>
       </div>
     );
