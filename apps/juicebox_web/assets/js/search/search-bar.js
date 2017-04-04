@@ -24,7 +24,6 @@ class SearchBar extends Component {
   render() {
     return (
       <div className="search">
-        <h2>Search</h2>
         <input
           type="text"
           value={this.state.term}

@@ -54,4 +54,23 @@
   *, *:before, *:after {
     box-sizing: inherit;
   }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    padding: 20px 20px 0;
+  }
+
+  h2 {
+    width: 100%;
+    text-transform: uppercase;
+    color: #FFF;
+    background-color: #2f7791;
+    padding: 0.3em;
+    margin-bottom: 10px;
+  }
+}
+
+.logo {
+  width: 105px;
+  height: 36px;
 }

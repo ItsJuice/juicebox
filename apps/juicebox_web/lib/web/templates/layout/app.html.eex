@@ -13,10 +13,6 @@
 
   <body>
     <div class="container" role="main">
-      <div class="header">
-        JuiceboxWeb
-      </div>
-
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 

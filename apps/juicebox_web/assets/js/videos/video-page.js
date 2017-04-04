@@ -5,20 +5,24 @@ import Reactions from '../reactions/reactions';
 import { addVideo } from './actions';
 import Video from './video';
 import VideoList from './video-list';
-import './styles.scss';
+import styles from './video-page.scss';
 
 class VideoPage extends Component {
   render() {
     const { queue, playing, playingStartTime } = this.props;
 
     return (
-      <div className="video-page">
-        <Video video={ playing } playingStartTime={ playingStartTime }/>
-        <VideoList videos={ queue }
-                   addVideo={ addVideo } />
-
+      <div className={ styles['video-page'] }>
         <Search streamId={ this.props.streamId } />
-        <Reactions streamId={this.props.streamId} />
+        <div className={ styles['main-column'] }>
+          <Video video={ playing } playingStartTime={ playingStartTime }/>
+          <Reactions streamId={this.props.streamId} />
+        </div>
+        <div className={ styles['side-column']} >
+          <VideoList videos={ queue }
+                     addVideo={ addVideo } />
+        </div>
+
       </div>
     );
   }
@@ -32,12 +36,7 @@ VideoPage.propTypes = {
   playingStartTime: PropTypes.number,
 };
 
-function mapStateToProps( { videos, router } ) {
-  let streamId;
-  if (router) {
-    streamId = router.params.streamId;
-  }
-
+function mapStateToProps( { videos }, { match: { params: { streamId } } } ) {
   let playingStartTime;
   if (videos.playingStartTime) {
     playingStartTime = Math.round(videos.playingStartTime / 1000);

@@ -4,6 +4,7 @@ import { receiveTerm } from './actions';
 import { addVideo } from '../videos/actions';
 import SearchBar from './search-bar';
 import ResultList from './result-list';
+import styles from './search.scss';
 
 class Search extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class Search extends Component {
 
   render() {
     return (
-      <div>
+      <div className={ styles.search }>
         <SearchBar receiveTerm={this.props.receiveTerm} />
         <ResultList results={this.props.results} onSelect={ this.handleVideoAdded } />
       </div>

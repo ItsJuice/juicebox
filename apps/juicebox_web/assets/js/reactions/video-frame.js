@@ -12,15 +12,31 @@ function drawVideo(ctx, video, targetWidth, targetHeight) {
   ctx.drawImage(video, x, y, width, height);
 }
 
+const isImageBlank = (() => {
+  const ALPHA = 3;
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+
+  return (img) => {
+    // clear the canvas
+    canvas.width = canvas.height = 1;
+    // draw a single pixel
+    ctx.drawImage(img, 0, 0, 1, 1);
+    const pixel = ctx.getImageData(0, 0, 1, 1).data;
+
+    return (pixel[ALPHA] === 0);
+  }
+})();
+
 class VideoFrame extends Component {
   constructor(props) {
     super(props);
-    this.renderFrame = this.renderFrame.bind(this);
+    this.animate = this.animate.bind(this);
   }
 
   componentDidMount() {
     this.ctx = this.canvas.getContext('2d');
-    this.renderFrame();
+    this.animate();
   }
 
   resize(width, height) {
@@ -32,7 +48,7 @@ class VideoFrame extends Component {
     const { frame, mask } = frameAssets(this.props.frame);
     const frameAspectRatio = (frame.naturalHeight / frame.naturalWidth);
     const width = this.canvas.offsetWidth;
-    const height = width * frameAspectRatio;
+    const height = (width * frameAspectRatio) || 0;
 
     this.resize(width, height);
 
@@ -44,13 +60,18 @@ class VideoFrame extends Component {
     this.ctx.restore();
 
     this.ctx.drawImage(frame, 0, 0, width, height);
+  }
 
-    window.requestAnimationFrame(this.renderFrame);
+  animate() {
+    if (!isImageBlank(this.video)) {
+      this.renderFrame();
+    }
+    window.requestAnimationFrame(this.animate);
   }
 
   render() {
     return (
-      <div className="video-frame">
+      <div className={ this.props.className }>
         <canvas ref={ (canvas) => { this.canvas = canvas } }></canvas>
         <video
           autoPlay
@@ -66,6 +87,7 @@ class VideoFrame extends Component {
 VideoFrame.propTypes = {
   src: PropTypes.string,
   frame: PropTypes.string,
+  className: PropTypes.string
 };
 
 export default VideoFrame;

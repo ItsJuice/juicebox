@@ -34,9 +34,9 @@ function createSocket(socket = newSocket()) {
           channel && channel.leave();
           channel = connect(socket, action.channel);
           channel.on('remote.action', action => dispatch(action));
+          break;
         default:
           if (socketData) {
-            console.log(socketData);
             channel && channel.push(socketData.event, socketData.payload);
             action = omit(action, 'socketData');
           }

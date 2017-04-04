@@ -8,20 +8,21 @@ import { subscribeToStream } from '../../../../assets/js/sockets';
 describe('subscribeToStream()', () => {
   let store;
   let actionStub;
-  let routeAction = { type: 'anything' };
-  let testAction = { type: 'triggered' };
-  let changedState = { router: { params: { streamId: 'puggle' } } };
+  let streamId = 'b*witched';
+
+  const testAction = { type: 'any' };
+  const streamIdFake = () => streamId;
 
   beforeEach(() => {
     actionStub = sinon.stub().returns(testAction);
-    store = createStore((state, action) => action === routeAction ? changedState : state);
+    store = createStore(() => ({}));
     sinon.spy(store, 'subscribe');
     sinon.spy(store, 'dispatch');
   });
 
   context('with a store and an action', () => {
     beforeEach(() => {
-      subscribeToStream({ store: store, action: actionStub });
+      subscribeToStream({ store: store, action: actionStub, getStreamId: streamIdFake });
     });
 
     it('subscribes to changes in the store', () => {
@@ -29,16 +30,31 @@ describe('subscribeToStream()', () => {
     });
 
     it('dispatches the action when the streamId param changes', () => {
-      store.dispatch(routeAction);
-      expect(actionStub).to.have.been.calledWith('puggle');
+      store.dispatch(testAction);
+      expect(actionStub).to.have.been.calledWith('b*witched');
       expect(store.dispatch).to.have.been.calledWith(testAction);
     });
 
     context('called multiple times', () => {
-      it('only dispatches the action once', () => {
-        store.dispatch(routeAction);
-        store.dispatch(routeAction);
-        expect(actionStub).to.have.been.calledOnce;
+      describe('with the same streamId', () => {
+        it('only dispatches the action once', () => {
+          store.dispatch(testAction);
+          store.dispatch(testAction);
+          expect(actionStub).to.have.been.calledOnce;
+        });
+      });
+
+      describe('with a different streamId', () => {
+        it('dispatches the action once per streamId', () => {
+          store.dispatch(testAction);
+          expect(actionStub).to.have.been.calledWith('b*witched');
+          expect(store.dispatch).to.have.been.calledWith(testAction);
+
+          streamId = 'east17';
+          store.dispatch(testAction);
+          expect(actionStub).to.have.been.calledWith('east17');
+          expect(store.dispatch).to.have.been.calledWith(testAction);
+        });
       });
     });
 

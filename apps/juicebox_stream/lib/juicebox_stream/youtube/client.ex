@@ -5,7 +5,6 @@ defmodule JuiceboxStream.Youtube.Client do
     part: "snippet",
     safeSearch: "strict",
     type: "video",
-    videoCategoryId: "10", # music
     order: "viewCount",
     videoEmbeddable: "true"
   }

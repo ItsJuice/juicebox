@@ -6,7 +6,7 @@ import ReactionRecorder from './recorder';
 import VideoFrame from './video-frame';
 import FrameSelector from './frame-selector';
 import { FRAMES } from './frames';
-import './styles.scss';
+import styles from './styles.scss';
 
 class Reactions extends Component {
   constructor(props) {
@@ -18,20 +18,28 @@ class Reactions extends Component {
 
   reactions() {
     return map(this.props.reactions, ({ video, frame }, userId) => {
-      return <VideoFrame src={video} frame={frame} key={userId} />
+      return <VideoFrame src={video}
+                         frame={frame}
+                         key={userId}
+                         className={ styles['video-frame'] } />
     });
   }
 
   render() {
     return (
       <div>
-        <ReactionRecorder
-          onRecord={ this.send }
-          frame={ this.state.frame }
-        />
-        <FrameSelector onChange={ this.onFrameChange } />
-        <div className="reactions">
-          { this.reactions() }
+        <h2>Reactions</h2>
+        <div className={ styles['reactions-container']}>
+          <ReactionRecorder
+            onRecord={ this.send }
+            frame={ this.state.frame }
+            styles={ styles }
+          />
+          <FrameSelector onChange={ this.onFrameChange }
+                         className={ styles['frame-selector'] } />
+          <div className={ styles.reactions }>
+            { this.reactions() }
+          </div>
         </div>
       </div>
     );
