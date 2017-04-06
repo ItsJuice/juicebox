@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { debounce } from 'lodash';
+import SearchIcon from './search.svg';
 
 const WAIT_TIME = 500;
 
@@ -22,13 +23,17 @@ class SearchBar extends Component {
   }
 
   render() {
+    const { styles } = this.props;
     return (
-      <div className="search">
+      <div className={ styles['search-bar'] }>
         <input
           type="text"
-          value={this.state.term}
-          onChange={this.smartSearch}
+          value={ this.state.term }
+          onChange={ this.smartSearch }
+          onFocus={ this.props.onOpen }
         />
+        <SearchIcon className={ styles['search-icon'] }
+                    onClick={ this.props.onOpen }/>
       </div>
     );
   }
@@ -36,6 +41,8 @@ class SearchBar extends Component {
 
 SearchBar.propTypes = {
   receiveTerm: PropTypes.func,
+  styles: PropTypes.object,
+  onOpen: PropTypes.func,
 };
 
 export default SearchBar;
