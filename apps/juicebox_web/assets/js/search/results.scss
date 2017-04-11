@@ -1,3 +1,11 @@
+.result-list {
+  position: absolute;
+  z-index: 200;
+  top: 30vh;
+  width: 80vw;
+  left: 10vw;
+}
+
 .result {
   margin-bottom: 1em;
   cursor: pointer;
