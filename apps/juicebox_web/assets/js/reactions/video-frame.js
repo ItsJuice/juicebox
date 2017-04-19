@@ -76,6 +76,7 @@ class VideoFrame extends Component {
         <video
           autoPlay
           loop
+          muted
           ref={ (video) => { this.video = video } }
           src={ this.props.src }>
         </video>
