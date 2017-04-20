@@ -9,6 +9,7 @@ import FrameSelector from './frame-selector';
 import { FRAMES } from './frames';
 import styles from './styles.scss';
 import classnames from 'classnames';
+import ReactButton from './react-button.svg';
 
 class Reactions extends Component {
   constructor(props) {
@@ -26,10 +27,14 @@ class Reactions extends Component {
 
   reactions() {
     return map(this.props.reactions, ({ video, frame }, userId) => {
-      return <VideoFrame src={video}
-                         frame={frame}
-                         key={userId}
-                         className={ styles['video-frame'] } />
+      return (
+        <div className={styles['reaction-list-item']}>
+          <VideoFrame src={video}
+                      frame={frame}
+                      key={userId}
+                      className={styles['video-frame']} />
+        </div>
+      );
     });
   }
 
@@ -73,7 +78,24 @@ class Reactions extends Component {
         </div>
 
         <div className={ styles['reaction-list'] }>
-          <button onClick={ this.setOpen }>Your reaction?</button>
+          <div className={styles['reaction-list-item']}
+               onClick={ this.setOpen }>
+            <div className={styles['reaction-button']}>
+              <ReactButton />
+            </div>
+          </div>
+          { this.reactions() }
+          { this.reactions() }
+          { this.reactions() }
+          { this.reactions() }
+          { this.reactions() }
+          { this.reactions() }
+          { this.reactions() }
+          { this.reactions() }
+          { this.reactions() }
+          { this.reactions() }
+          { this.reactions() }
+          { this.reactions() }
           { this.reactions() }
         </div>
       </div>
