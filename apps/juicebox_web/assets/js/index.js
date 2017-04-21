@@ -7,9 +7,7 @@ import rootReducer from './root-reducer';
 import configureStore from './store'
 import { connectToChannel, subscribeToStream } from './sockets';
 
-const initialState = {
-  videos: []
-};
+const initialState = {};
 
 const appInit = () => {
   const store = configureStore(rootReducer, initialState);
