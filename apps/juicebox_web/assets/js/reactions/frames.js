@@ -1,12 +1,14 @@
+import shuffle from 'lodash/shuffle';
+
 const frameAsset = require.context('../../images/frames', false);
 
-const FRAMES = [
+const FRAMES = shuffle([
   'frame-1',
   'frame-2',
   'frame-3',
   'frame-4',
   'frame-5'
-];
+]);
 
 const image = (src) => {
   const img = new Image();

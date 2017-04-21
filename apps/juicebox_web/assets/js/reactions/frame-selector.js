@@ -1,10 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 import { FRAMES, frameAssets } from './frames';
+import SelectedIndicator from './images/selected.svg';
+import styles from './styles.scss';
 
 function _renderFrames() {
+  const { selected } = this.props;
+
   return FRAMES.map((frame) => (
-    <li key={frame} onClick={ this.props.onChange.bind(this, frame) }>
-      <img src={ frameAssets(frame).frame.src } />
+    <li
+      className={ selected == frame ? styles.selected : '' }
+      key={frame}
+      onClick={ this.props.onChange.bind(this, frame) }
+      style={{ backgroundImage: `url(${frameAssets(frame).frame.src})` }}>
+        <SelectedIndicator className={ styles['selected-indicator'] } />
     </li>
   ), this);
 }

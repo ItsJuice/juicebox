@@ -1,11 +1,138 @@
-.reactions {
+$small: 850px;
+
+.btn {
   width: 100%;
+  padding: .5em;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  background-color: #d32e6a;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 200;
+  width: 31px;
+  height: 31px;
+  cursor: pointer;
+}
+
+.reactions-container {
+  position: absolute;
+  top: 65px;
+  left: 50%;
+  display: flex;
+  width: 90%;
+  max-width: 1000px;
+  padding: 20px;
+  margin: -5px;
+  transform: translateX(-50%);
+  flex-flow: column;
+
+  @media (min-width: $small) {
+    flex-flow: row wrap;
+  }
+}
+
+.main-column {
+  width: 100%;
+  margin: 5px;
+
+  @media (min-width: $small) {
+    width: calc(67% - 10px);
+  }
+}
+
+.side-column {
+  width: 100%;
+  margin: 5px;
+
+  img {
+    max-width: 100%;
+  }
+
+  @media (min-width: $small) {
+    width: calc(33% - 10px);
+    order: 1;
+  }
+}
+
+.reactions {
+  .reactions-modal {
+    display: none;
+  }
+
+  &.open {
+    .reactions-modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10000;
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      &::before {
+        content: ' ';
+        position: fixed;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-color: #f8f8f8;
+        opacity: .95;
+      }
+    }
+  }
+}
+
+.reaction-list-item {
+  position: relative;
+  width: 100%;
+  margin-right: 3%;
+  margin-bottom: 4%;
+
+  @media (min-width: 650px) {
+    width: 47%;
+  }
+
+  @media (min-width: 950px) {
+    width: 30%;
+  }
+
+  @media (min-width: 1400px) {
+    width: 22%;
+  }
+
+  @media (min-width: 1900px) {
+    width: 17%;
+  }
+
+  &::after {
+    content: ' ';
+    display: block;
+    padding-bottom: 120%;
+  }
+}
+
+.reaction-list {
+  display: flex;
+  width: 100%;
+  flex-flow: row wrap;
+
+  .video-frame {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .video-frame {
-  display: inline-block;
-  width: 200px;
   canvas {
+    object-fit: contain;
     width: 100%;
   }
 
@@ -17,13 +144,15 @@
   }
 }
 
-.reactions-container {
-  background-color: #f2f2f2;
-  padding: 20px;
+.webcam-container {
+  margin-bottom: 10px;
+  background-color: #fff;
 }
 
 .webcam {
-  width: 200px;
+  width: 75%;
+  padding: 3%;
+  margin: 0 auto;
 
   video {
     width: 100%;
@@ -39,41 +168,130 @@
     content: ' ';
     display: block;
     visibility: hidden;
-    background-color: red;
+    background-color: #d32e6a;
     width: 0;
-    height: 2px;
     transition: width 2.5s;
     transition-timing-function: linear;
+    margin-top: 14px;
   }
 
   &.recording {
     &::after {
       visibility: visible;
       width: 100%;
+      height: 5px;
     }
   }
 }
 
 .recorder-controls {
   display: flex;
+  flex-direction: column;
 
-  button {
-    flex: 1;
-    margin: 0 10px;
+  .btn {
+    width: 100%;
+    margin-bottom: .75em;
+  }
+
+  @media (min-width: $small) {
+    flex-direction: row;
+
+    .btn {
+      order: 1;
+
+      + .btn {
+        margin-right: 1em;
+        order: 0;
+      }
+    }
+  }
+}
+
+.frame-scroller {
+  padding: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  @media (min-width: $small) {
+    padding: 0;
+    overflow: visible;
   }
 }
 
 .frame-selector {
+  $frame-width: 150px;
+  $frame-spacing: 20px;
+
   list-style: none;
+  width: ($frame-width + $frame-spacing) * 5;
 
   li {
     display: inline-block;
-    width: 100px;
-    margin: 0 10px;
     cursor: pointer;
+    width: $frame-width;
+    height: $frame-width;
+    margin-right: $frame-spacing;
+    background-repeat: no-repeat;
+    background-size: 85% 85%;
+    background-position: center center;
+    background-color: #fff;
+    position: relative;
 
-    img {
-      width: 100%;
+    .selected-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      opacity: 0;
+      transition: all .4s;
+    }
+
+    &.selected {
+      background-color: #ccc;
+
+      .selected-indicator {
+        top: -2%;
+        left: -2%;
+        width: 104%;
+        opacity: 1;
+      }
     }
   }
+
+  @media (min-width: $small) {
+    width: auto;
+
+    li {
+      width: 49%;
+      height: 0;
+      padding-bottom: 50%;
+      margin: 0;
+      margin-bottom: 2%;
+
+      &:nth-child(odd) {
+        margin-right: 2%;
+      }
+    }
+  }
+}
+
+.reaction-button {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 4%;
+  cursor: pointer;
+  background-color: #2f7791;
+
+  > svg {
+    object-fit: contain;
+    width: 100%;
+  }
+}
+
+.snap-icon {
+  width: 1.2em;
+  margin-right: .3em;
+  vertical-align: sub;
 }
