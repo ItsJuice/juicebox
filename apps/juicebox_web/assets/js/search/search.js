@@ -7,7 +7,7 @@ import { addVideo } from '../videos/actions';
 import SearchBar from './search-bar';
 import ResultList from './result-list';
 import styles from './search.scss';
-import CloseIcon from './close.svg';
+import CloseIcon from '../common/close.svg';
 
 class Search extends Component {
   constructor(props) {

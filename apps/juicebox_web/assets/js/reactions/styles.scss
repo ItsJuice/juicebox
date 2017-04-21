@@ -1,3 +1,5 @@
+$small: 850px;
+
 .btn {
   color: white;
   text-transform: uppercase;
@@ -10,24 +12,51 @@
 
 .close-btn {
   position: absolute;
-  top: -6.4rem;
-  right: 0;
-  color: #D32E6A;
-  font-size: 8rem;
+  top: 20px;
+  right: 20px;
+  z-index: 200;
+  width: 31px;
+  height: 31px;
   cursor: pointer;
 }
 
+.reactions-container {
+  padding: 20px;
+  display: flex;
+  flex-flow: column;
+  margin: -5px;
+  position: absolute;
+  top: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1000px;
+
+  @media (min-width: $small) {
+    flex-flow: row wrap;
+  }
+}
+
 .main-column {
-  width: calc(67% - 10px);
+  width: 100%;
   margin: 5px;
+
+  @media (min-width: $small) {
+    width: calc(67% - 10px);
+  }
 }
 
 .side-column {
-  width: calc(33% - 10px);
+  width: 100%;
   margin: 5px;
 
   img {
     max-width: 100%;
+  }
+
+  @media (min-width: $small) {
+    width: calc(33% - 10px);
+    order: 1;
   }
 }
 
@@ -52,21 +81,9 @@
         content: ' ';
         width: 100%;
         height: 100%;
-        background-color: white;
-        opacity: 0.93;
+        background-color: #f8f8f8;
+        opacity: 0.95;
       }
-    }
-
-    .reactions-container {
-      display: flex;
-      flex-flow: row wrap;
-      margin: -5px;
-      position: absolute;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 1000px;
     }
   }
 }
@@ -74,7 +91,6 @@
 .reaction-list {
   display: flex;
   width: 100%;
-  justify-content: space-between;
   flex-flow: row wrap;
 }
 
@@ -82,6 +98,7 @@
   position: relative;
   width: 100%;
   margin-bottom: 4%;
+  margin-right: 3%;
 
   @media (min-width: 650px) {
     width: 47%;
@@ -96,7 +113,7 @@
   }
 
   @media (min-width: 1900px) {
-    width: 18%;
+    width: 17%;
   }
 
   &:after {
@@ -129,18 +146,13 @@
   }
 }
 
-.reactions-container {
-  background-color: #f2f2f2;
-  padding: 20px;
-}
-
 .webcam-container {
   background-color: white;
   margin-bottom: 10px;
 }
 
 .webcam {
-  width: 90%;
+  width: 75%;
   margin: 0 auto;
   padding: 3%;
 
@@ -158,55 +170,109 @@
     content: ' ';
     display: block;
     visibility: hidden;
-    background-color: red;
+    background-color: #D32E6A;
     width: 0;
-    height: 2px;
     transition: width 2.5s;
     transition-timing-function: linear;
+    margin-top: 14px;
   }
 
   &.recording {
     &::after {
       visibility: visible;
       width: 100%;
+      height: 5px;
     }
   }
 }
 
 .recorder-controls {
   display: flex;
+  flex-direction: column;
 
   .btn {
     width: 100%;
+    margin-bottom: 0.75em;
+  }
 
-    & + .btn {
-      margin-left: 1em;
+  @media (min-width: $small) {
+    flex-direction: row;
+
+    .btn {
+      order: 1;
+
+      & + .btn {
+        margin-right: 1em;
+        order: 0;
+      }
     }
   }
 }
 
+.frame-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px;
+
+  @media (min-width: $small) {
+    overflow: visible;
+    padding: 0;
+  }
+}
+
 .frame-selector {
+  $frame-width: 150px;
+  $frame-spacing: 20px;
+
   list-style: none;
+  width: ($frame-width + $frame-spacing) * 5;
 
   li {
     display: inline-block;
-    width: 49%;
-    height: 0;
-    margin: 0;
     cursor: pointer;
-    padding-bottom: 50%;
+    width: $frame-width;
+    height: $frame-width;
+    margin-right: $frame-spacing;
     background-repeat: no-repeat;
     background-size: 85% 85%;
     background-position: center center;
     background-color: white;
-    margin-bottom: 2%;
+    position: relative;
 
-    &:nth-child(odd) {
-      margin-right: 2%;
+    .selected-indicator {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      top: 50%;
+      left: 50%;
+      transition: all 0.4s;
     }
 
     &.selected {
-      background-color: #999;
+      background-color: #ccc;
+
+      .selected-indicator {
+        opacity: 1;
+        width: 104%;
+        left: -2%;
+        top: -2%;
+      }
+    }
+  }
+
+  @media (min-width: $small) {
+    width: auto;
+
+    li {
+      width: 49%;
+      height: 0;
+      margin: 0;
+      padding-bottom: 50%;
+      margin-bottom: 2%;
+
+      &:nth-child(odd) {
+        margin-right: 2%;
+      }
     }
   }
 }
@@ -224,4 +290,10 @@
     object-fit: contain;
     width: 100%;
   }
+}
+
+.snap-icon {
+  width: 1.2em;
+  vertical-align: sub;
+  margin-right: 0.3em;
 }

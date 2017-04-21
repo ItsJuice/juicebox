@@ -11,6 +11,7 @@ import styles from './styles.scss';
 import classnames from 'classnames';
 import ReactButton from './react-button.svg';
 import show from '../lib/show-when';
+import CloseIcon from '../common/close.svg';
 
 class Reactions extends Component {
   constructor(props) {
@@ -66,22 +67,22 @@ class Reactions extends Component {
     return (
       <div className={ classes }>
         <div className={ styles['reactions-modal']}>
+          <CloseIcon className={ styles['close-btn'] }
+                     onClick={ this.setClosed } />
+
           <div className={ styles['reactions-container']}>
-            <div className={ styles['close-btn'] }
-              onClick={ this.setClosed }>
-              &times;
+            <div className={ styles['side-column'] }>
+              <h2>Choose your frame</h2>
+              <div className={ styles['frame-scroller'] }>
+                <FrameSelector onChange={ this.onFrameChange }
+                  selected={ this.state.frame }
+                  className={ styles['frame-selector'] } />
+              </div>
             </div>
 
             <div className={ styles['main-column'] }>
               <h2>Strike a pose</h2>
               { show(this.recorder).when(open) }
-            </div>
-
-            <div className={ styles['side-column'] }>
-              <h2>Choose your frame</h2>
-              <FrameSelector onChange={ this.onFrameChange }
-                selected={ this.state.frame }
-                className={ styles['frame-selector'] } />
             </div>
           </div>
         </div>

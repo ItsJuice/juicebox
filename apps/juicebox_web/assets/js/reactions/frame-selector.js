@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { FRAMES, frameAssets } from './frames';
+import SelectedIndicator from './selected.svg';
 import styles from './styles.scss';
 
 function _renderFrames() {
@@ -11,6 +12,7 @@ function _renderFrames() {
       key={frame}
       onClick={ this.props.onChange.bind(this, frame) }
       style={{ backgroundImage: `url(${frameAssets(frame).frame.src})` }}>
+        <SelectedIndicator className={ styles['selected-indicator'] } />
     </li>
   ), this);
 }

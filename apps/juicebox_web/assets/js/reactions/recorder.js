@@ -7,6 +7,7 @@ import VideoFrame from './video-frame';
 import Webcam from './webcam';
 import show from '../lib/show-when';
 import styles from './styles.scss';
+import SnapIcon from './snap.svg';
 
 const webcam = new Webcam();
 
@@ -31,7 +32,9 @@ class ReactionRecorder extends Component {
   }
 
   recordButton = () =>
-    <div className={ styles.btn } onClick={this.record}>SNAP</div>
+    <div className={ styles.btn } onClick={this.record}>
+      <SnapIcon className={ styles['snap-icon'] } /> SNAP
+    </div>
 
   clearButton = () =>
     <div className={ styles.btn } onClick={this.clearRecording}>SNAP AGAIN</div>
@@ -62,8 +65,8 @@ class ReactionRecorder extends Component {
 
         <div className={ styles['recorder-controls'] }>
           { show(this.recordButton).when(isConnected && !video && !isRecording) }
-          { show(this.clearButton).when(isConnected && video) }
           { show(this.sendButton).when(video) }
+          { show(this.clearButton).when(isConnected && video) }
         </div>
       </div>
     );
