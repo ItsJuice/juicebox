@@ -1,10 +1,25 @@
+.btn {
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  width: 100%;
+  background-color: #D32E6A;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
+.close-btn {
+  position: absolute;
+  top: -6.4rem;
+  right: 0;
+  color: #D32E6A;
+  font-size: 8rem;
+  cursor: pointer;
+}
+
 .main-column {
   width: calc(67% - 10px);
   margin: 5px;
-
-  > * + * {
-    margin-top: 40px;
-  }
 }
 
 .side-column {
@@ -48,8 +63,10 @@
       margin: -5px;
       position: absolute;
       top: 10%;
-      left: 5%;
+      left: 50%;
+      transform: translateX(-50%);
       width: 90%;
+      max-width: 1000px;
     }
   }
 }
@@ -117,8 +134,15 @@
   padding: 20px;
 }
 
+.webcam-container {
+  background-color: white;
+  margin-bottom: 10px;
+}
+
 .webcam {
-  width: 200px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 3%;
 
   video {
     width: 100%;
@@ -152,9 +176,12 @@
 .recorder-controls {
   display: flex;
 
-  button {
-    flex: 1;
-    margin: 0 10px;
+  .btn {
+    width: 100%;
+
+    & + .btn {
+      margin-left: 1em;
+    }
   }
 }
 
@@ -169,7 +196,7 @@
     cursor: pointer;
     padding-bottom: 50%;
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: 85% 85%;
     background-position: center center;
     background-color: white;
     margin-bottom: 2%;

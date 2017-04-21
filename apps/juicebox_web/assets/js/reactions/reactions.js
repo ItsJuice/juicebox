@@ -10,6 +10,7 @@ import { FRAMES } from './frames';
 import styles from './styles.scss';
 import classnames from 'classnames';
 import ReactButton from './react-button.svg';
+import show from '../lib/show-when';
 
 class Reactions extends Component {
   constructor(props) {
@@ -51,6 +52,13 @@ class Reactions extends Component {
     this.setState({ open: false })
   }
 
+  recorder = () => (
+    <ReactionRecorder
+      onRecord={ this.sendAndClose }
+      frame={ this.state.frame }
+    />
+  );
+
   render() {
     const { open } = this.state;
     const classes = classnames(styles.reactions, { [styles.open]: open });
@@ -59,13 +67,14 @@ class Reactions extends Component {
       <div className={ classes }>
         <div className={ styles['reactions-modal']}>
           <div className={ styles['reactions-container']}>
+            <div className={ styles['close-btn'] }
+              onClick={ this.setClosed }>
+              &times;
+            </div>
+
             <div className={ styles['main-column'] }>
               <h2>Strike a pose</h2>
-              <ReactionRecorder
-                onRecord={ this.sendAndClose }
-                frame={ this.state.frame }
-                styles={ styles }
-              />
+              { show(this.recorder).when(open) }
             </div>
 
             <div className={ styles['side-column'] }>
@@ -84,18 +93,6 @@ class Reactions extends Component {
               <ReactButton />
             </div>
           </div>
-          { this.reactions() }
-          { this.reactions() }
-          { this.reactions() }
-          { this.reactions() }
-          { this.reactions() }
-          { this.reactions() }
-          { this.reactions() }
-          { this.reactions() }
-          { this.reactions() }
-          { this.reactions() }
-          { this.reactions() }
-          { this.reactions() }
           { this.reactions() }
         </div>
       </div>

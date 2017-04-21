@@ -6,6 +6,7 @@ import VideoEncoder from './video-encoder';
 import VideoFrame from './video-frame';
 import Webcam from './webcam';
 import show from '../lib/show-when';
+import styles from './styles.scss';
 
 const webcam = new Webcam();
 
@@ -21,20 +22,22 @@ class ReactionRecorder extends Component {
     }
   }
 
-  startButton = () =>
-    <button onClick={this.startWebcam}>Record a reaction</button>
+  componentDidMount() {
+    this.startWebcam();
+  }
 
-  stopButton = () =>
-    <button onClick={this.stopWebcam}>&times;</button>
+  componentWillUnmount() {
+    this.stopWebcam();
+  }
 
   recordButton = () =>
-    <button onClick={this.record}>Record</button>
+    <div className={ styles.btn } onClick={this.record}>SNAP</div>
 
   clearButton = () =>
-    <button onClick={this.clearRecording}>Clear</button>
+    <div className={ styles.btn } onClick={this.clearRecording}>SNAP AGAIN</div>
 
   sendButton = () =>
-    <button onClick={this.send}>Send</button>
+    <div className={ styles.btn } onClick={this.send}>PERFECT!</div>
 
   render() {
     const {
@@ -44,25 +47,23 @@ class ReactionRecorder extends Component {
       isRecording,
     } = this.state;
 
-    const { styles } = this.props;
-
     return (
       <div className="reaction-recorder">
-        <div className={ `${ styles.webcam }
-          ${!isConnected ? styles.offline : ''}
-          ${isRecording ? styles.recording : ''} `}>
+        <div className={ styles['webcam-container'] }>
+          <div className={ `${ styles.webcam }
+            ${!isConnected ? styles.offline : ''}
+            ${isRecording ? styles.recording : ''} `}>
 
-          { show(this.stopButton).when(isConnected) }
-          <VideoFrame src={video || stream}
-            frame={ this.props.frame }
-            className={ styles['video-frame'] } />
-
-          <div className={ styles['recorder-controls'] }>
-            { show(this.startButton).when(!isConnected) }
-            { show(this.recordButton).when(isConnected && !video && !isRecording) }
-            { show(this.clearButton).when(isConnected && video) }
-            { show(this.sendButton).when(video) }
+            <VideoFrame src={video || stream}
+              frame={ this.props.frame }
+              className={ styles['video-frame'] } />
           </div>
+        </div>
+
+        <div className={ styles['recorder-controls'] }>
+          { show(this.recordButton).when(isConnected && !video && !isRecording) }
+          { show(this.clearButton).when(isConnected && video) }
+          { show(this.sendButton).when(video) }
         </div>
       </div>
     );
