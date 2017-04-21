@@ -1,13 +1,13 @@
 $small: 850px;
 
 .btn {
-  color: white;
-  text-transform: uppercase;
-  text-align: center;
   width: 100%;
-  background-color: #D32E6A;
-  padding: 0.5em;
+  padding: .5em;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
   cursor: pointer;
+  background-color: #d32e6a;
 }
 
 .close-btn {
@@ -21,16 +21,16 @@ $small: 850px;
 }
 
 .reactions-container {
-  padding: 20px;
-  display: flex;
-  flex-flow: column;
-  margin: -5px;
   position: absolute;
   top: 65px;
   left: 50%;
-  transform: translateX(-50%);
+  display: flex;
   width: 90%;
   max-width: 1000px;
+  padding: 20px;
+  margin: -5px;
+  transform: translateX(-50%);
+  flex-flow: column;
 
   @media (min-width: $small) {
     flex-flow: row wrap;
@@ -67,38 +67,32 @@ $small: 850px;
 
   &.open {
     .reactions-modal {
-      display: block;
-      z-index: 10000;
       position: absolute;
       top: 0;
       left: 0;
+      z-index: 10000;
+      display: block;
       width: 100%;
       height: 100%;
 
-      &:before {
+      &::before {
+        content: ' ';
         position: fixed;
         display: block;
-        content: ' ';
         width: 100%;
         height: 100%;
         background-color: #f8f8f8;
-        opacity: 0.95;
+        opacity: .95;
       }
     }
   }
 }
 
-.reaction-list {
-  display: flex;
-  width: 100%;
-  flex-flow: row wrap;
-}
-
 .reaction-list-item {
   position: relative;
   width: 100%;
-  margin-bottom: 4%;
   margin-right: 3%;
+  margin-bottom: 4%;
 
   @media (min-width: 650px) {
     width: 47%;
@@ -116,19 +110,23 @@ $small: 850px;
     width: 17%;
   }
 
-  &:after {
+  &::after {
     content: ' ';
-    padding-bottom: 120%;
     display: block;
+    padding-bottom: 120%;
   }
 }
 
 .reaction-list {
+  display: flex;
+  width: 100%;
+  flex-flow: row wrap;
+
   .video-frame {
     position: absolute;
+    display: flex;
     width: 100%;
     height: 100%;
-    display: flex;
   }
 }
 
@@ -147,14 +145,14 @@ $small: 850px;
 }
 
 .webcam-container {
-  background-color: white;
   margin-bottom: 10px;
+  background-color: #fff;
 }
 
 .webcam {
   width: 75%;
-  margin: 0 auto;
   padding: 3%;
+  margin: 0 auto;
 
   video {
     width: 100%;
@@ -170,7 +168,7 @@ $small: 850px;
     content: ' ';
     display: block;
     visibility: hidden;
-    background-color: #D32E6A;
+    background-color: #d32e6a;
     width: 0;
     transition: width 2.5s;
     transition-timing-function: linear;
@@ -192,7 +190,7 @@ $small: 850px;
 
   .btn {
     width: 100%;
-    margin-bottom: 0.75em;
+    margin-bottom: .75em;
   }
 
   @media (min-width: $small) {
@@ -201,7 +199,7 @@ $small: 850px;
     .btn {
       order: 1;
 
-      & + .btn {
+      + .btn {
         margin-right: 1em;
         order: 0;
       }
@@ -210,13 +208,13 @@ $small: 850px;
 }
 
 .frame-scroller {
+  padding: 10px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 10px;
 
   @media (min-width: $small) {
-    overflow: visible;
     padding: 0;
+    overflow: visible;
   }
 }
 
@@ -236,26 +234,26 @@ $small: 850px;
     background-repeat: no-repeat;
     background-size: 85% 85%;
     background-position: center center;
-    background-color: white;
+    background-color: #fff;
     position: relative;
 
     .selected-indicator {
       position: absolute;
-      opacity: 0;
-      width: 0;
       top: 50%;
       left: 50%;
-      transition: all 0.4s;
+      width: 0;
+      opacity: 0;
+      transition: all .4s;
     }
 
     &.selected {
       background-color: #ccc;
 
       .selected-indicator {
-        opacity: 1;
-        width: 104%;
-        left: -2%;
         top: -2%;
+        left: -2%;
+        width: 104%;
+        opacity: 1;
       }
     }
   }
@@ -266,8 +264,8 @@ $small: 850px;
     li {
       width: 49%;
       height: 0;
-      margin: 0;
       padding-bottom: 50%;
+      margin: 0;
       margin-bottom: 2%;
 
       &:nth-child(odd) {
@@ -278,15 +276,15 @@ $small: 850px;
 }
 
 .reaction-button {
-  background-color: #2f7791;
-  cursor: pointer;
   position: absolute;
+  display: flex;
   width: 100%;
   height: 100%;
-  display: flex;
   padding: 4%;
+  cursor: pointer;
+  background-color: #2f7791;
 
-  & > svg {
+  > svg {
     object-fit: contain;
     width: 100%;
   }
@@ -294,6 +292,6 @@ $small: 850px;
 
 .snap-icon {
   width: 1.2em;
+  margin-right: .3em;
   vertical-align: sub;
-  margin-right: 0.3em;
 }
