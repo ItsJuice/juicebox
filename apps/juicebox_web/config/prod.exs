@@ -14,6 +14,7 @@ use Mix.Config
 config :juicebox_web, JuiceboxWeb.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [host: System.get_env("HOST"), port: 80],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/manifest.json"
 
 # Do not print debug messages in production
