@@ -7,7 +7,7 @@ import VideoFrame from './video-frame';
 import Webcam from './webcam';
 import show from '../lib/show-when';
 import styles from './styles.scss';
-import SnapIcon from './snap.svg';
+import SnapIcon from './images/snap.svg';
 
 const webcam = new Webcam();
 

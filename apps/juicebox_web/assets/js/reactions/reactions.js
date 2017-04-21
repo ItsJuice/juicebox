@@ -9,7 +9,7 @@ import FrameSelector from './frame-selector';
 import { FRAMES } from './frames';
 import styles from './styles.scss';
 import classnames from 'classnames';
-import ReactButton from './react-button.svg';
+import ReactButton from './images/react-button.svg';
 import show from '../lib/show-when';
 import CloseIcon from '../common/close.svg';
 

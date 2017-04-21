@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { FRAMES, frameAssets } from './frames';
-import SelectedIndicator from './selected.svg';
+import SelectedIndicator from './images/selected.svg';
 import styles from './styles.scss';
 
 function _renderFrames() {
