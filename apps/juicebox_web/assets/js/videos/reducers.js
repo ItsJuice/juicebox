@@ -3,9 +3,14 @@ import {
   PLAYING_CHANGED,
   RECEIVE_TERM,
   RECEIVE_RESULTS,
+  TOGGLE_EXPANDED,
 } from './actions';
 
-function videos(state = {}, action) {
+const initialState = {
+  expanded: true
+};
+
+function videos(state = initialState, action) {
   switch (action.type) {
     case RECEIVE_TERM:
       return state;
@@ -18,7 +23,10 @@ function videos(state = {}, action) {
         {
           playing: action.playing.video,
           playingStartTime: action.time,
+          playingUpdated: (new Date()).getTime()
         });
+    case TOGGLE_EXPANDED:
+      return Object.assign({}, state, { expanded: !state.expanded });
     default:
       return state;
   }

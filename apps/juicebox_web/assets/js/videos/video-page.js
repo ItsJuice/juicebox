@@ -2,20 +2,23 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Search from '../search/search';
 import Reactions from '../reactions/reactions';
-import { addVideo } from './actions';
+import { addVideo, toggleExpanded } from './actions';
 import Video from './video';
 import VideoList from './video-list';
 import styles from './video-page.scss';
 
 class VideoPage extends Component {
   render() {
-    const { queue, playing, playingStartTime } = this.props;
+    const { queue, playing, playingStartTime, expanded, toggleExpanded } = this.props;
 
     return (
       <div className={ styles['video-page'] }>
         <Search streamId={ this.props.streamId } />
         <div className={ styles['main-column'] }>
-          <Video video={ playing } playingStartTime={ playingStartTime }/>
+          <Video video={ playing }
+                 playingStartTime={ playingStartTime }
+                 expanded={ expanded }
+                 toggleExpanded={ toggleExpanded } />
           <Reactions streamId={this.props.streamId} />
         </div>
         <div className={ styles['side-column']} >
@@ -34,12 +37,16 @@ VideoPage.propTypes = {
   playing: PropTypes.object,
   streamId: PropTypes.string.isRequired,
   playingStartTime: PropTypes.number,
+  expanded: PropTypes.bool,
+  toggleExpanded: PropTypes.func,
 };
 
 function mapStateToProps( { videos }, { match: { params: { streamId } } } ) {
   let playingStartTime;
   if (videos.playingStartTime) {
-    playingStartTime = Math.round(videos.playingStartTime / 1000);
+    const diff = (new Date()).getTime() - videos.playingUpdated;
+    playingStartTime = videos.playingStartTime + diff;
+    playingStartTime = Math.round(playingStartTime / 1000);
   } else {
     playingStartTime = 0;
   }
@@ -51,4 +58,4 @@ function mapStateToProps( { videos }, { match: { params: { streamId } } } ) {
     });
 }
 
-export default connect(mapStateToProps, { addVideo })(VideoPage);
+export default connect(mapStateToProps, { addVideo, toggleExpanded })(VideoPage);

@@ -1,7 +1,7 @@
 const ADD_VIDEO = 'ADD_VIDEO';
-const LOAD_STATE = 'ADD_VIDEO';
 const QUEUE_UPDATED = 'QUEUE_UPDATED';
 const PLAYING_CHANGED = 'PLAYING_CHANGED';
+const TOGGLE_EXPANDED = 'TOGGLE_EXPANDED';
 
 function addVideo({ streamId, video }) {
   return {
@@ -16,18 +16,6 @@ function addVideo({ streamId, video }) {
   };
 }
 
-function loadInitialState() {
-  return {
-    type: LOAD_STATE,
-    socketData: {
-      event: 'video.getState',
-      payload: {
-        stream_id: 'main',
-      }
-    }
-  };
-}
-
 function queueUpdated(videos) {
   return {
     type: QUEUE_UPDATED,
@@ -35,11 +23,18 @@ function queueUpdated(videos) {
   };
 }
 
+function toggleExpanded() {
+  return {
+    type: TOGGLE_EXPANDED,
+  }
+}
+
 export {
   ADD_VIDEO,
   QUEUE_UPDATED,
   PLAYING_CHANGED,
+  TOGGLE_EXPANDED,
   addVideo,
   queueUpdated,
-  loadInitialState,
+  toggleExpanded,
 };
