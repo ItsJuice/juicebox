@@ -22,7 +22,7 @@ function videos(state = initialState, action) {
       return Object.assign({}, state,
         {
           playing: action.playing.video,
-          playingStartTime: action.time,
+          playingStartTime: action.time || 0,
           playingUpdated: (new Date()).getTime()
         });
     case TOGGLE_EXPANDED:
