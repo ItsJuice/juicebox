@@ -18,6 +18,10 @@ const isImageBlank = (() => {
   const ctx = canvas.getContext('2d');
 
   return (img) => {
+    if (!img) {
+      return true;
+    }
+
     // clear the canvas
     canvas.width = canvas.height = 1;
     // draw a single pixel

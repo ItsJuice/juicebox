@@ -30,10 +30,9 @@ class Reactions extends Component {
   reactions() {
     return map(this.props.reactions, ({ video, frame }, userId) => {
       return (
-        <div className={styles['reaction-list-item']}>
+        <div key={userId} className={styles['reaction-list-item']}>
           <VideoFrame src={video}
                       frame={frame}
-                      key={userId}
                       className={styles['video-frame']} />
         </div>
       );
