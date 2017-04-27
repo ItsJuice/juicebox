@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { isNil } from 'lodash/lang';
 import Search from '../search/search';
 import Reactions from '../reactions/reactions';
 import { addVideo, toggleExpanded } from './actions';
@@ -43,20 +42,7 @@ VideoPage.propTypes = {
 };
 
 function mapStateToProps( { videos }, { match: { params: { streamId } } } ) {
-  let playingStartTime;
-  if (!isNil(videos.playingStartTime)) {
-    const diff = (new Date()).getTime() - videos.playingUpdated;
-    playingStartTime = videos.playingStartTime + diff;
-    playingStartTime = Math.round(playingStartTime / 1000);
-  } else {
-    playingStartTime = 0;
-  }
-
-  return Object.assign({}, videos,
-    {
-      playingStartTime,
-      streamId,
-    });
+  return Object.assign({}, videos, { streamId });
 }
 
 export default connect(mapStateToProps, { addVideo, toggleExpanded })(VideoPage);

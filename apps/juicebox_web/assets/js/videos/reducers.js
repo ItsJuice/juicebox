@@ -1,3 +1,4 @@
+import { isNil } from 'lodash/lang';
 import {
   QUEUE_UPDATED,
   PLAYING_CHANGED,
@@ -9,6 +10,20 @@ import {
 const initialState = {
   expanded: true
 };
+
+function initialTime({ time }) {
+  return isNil(time) ? 0 : Math.round(time / 1000);
+}
+
+function updatePlayingStartTime(videos) {
+  let playingStartTime = 0;
+  let playingUpdated = (new Date()).getTime();
+  if (!isNil(videos.playingStartTime)) {
+    const diff = playingUpdated - videos.playingUpdated;
+    playingStartTime = Math.round(videos.playingStartTime + diff / 1000);
+  }
+  return { playingUpdated, playingStartTime };
+}
 
 function videos(state = initialState, action) {
   switch (action.type) {
@@ -22,11 +37,13 @@ function videos(state = initialState, action) {
       return Object.assign({}, state,
         {
           playing: action.playing.video,
-          playingStartTime: action.time || 0,
+          playingStartTime: initialTime(action),
           playingUpdated: (new Date()).getTime()
         });
     case TOGGLE_EXPANDED:
-      return Object.assign({}, state, { expanded: !state.expanded });
+      return Object.assign({}, state, updatePlayingStartTime(state), {
+        expanded: !state.expanded
+      });
     default:
       return state;
   }
