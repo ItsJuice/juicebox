@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Search from '../search/search';
 import Reactions from '../reactions/reactions';
-import { addVideo, toggleExpanded, voteDown, voteUp } from './actions';
+import { addVideo, toggleExpanded, voteDown, voteUp, skipPlaying } from './actions';
 import Video from './video';
 import VideoList from './video-list';
 import styles from './video-page.scss';
@@ -14,6 +14,7 @@ class VideoPage extends Component {
       playing,
       playingStartTime,
       queue,
+      skipPlaying,
       streamId,
       toggleExpanded,
       votes,
@@ -29,6 +30,8 @@ class VideoPage extends Component {
                  playingStartTime={ playingStartTime }
                  expanded={ expanded }
                  toggleExpanded={ toggleExpanded }
+                 skipPlaying={ skipPlaying }
+                 streamId={ streamId }
           />
           <Reactions streamId={ streamId } />
         </div>
@@ -55,6 +58,7 @@ VideoPage.propTypes = {
   playingStartTime: PropTypes.number,
   expanded: PropTypes.bool,
   toggleExpanded: PropTypes.func,
+  skipPlaying: PropTypes.func,
   votes: PropTypes.object,
   voteDown: PropTypes.func,
   voteUp: PropTypes.func,
@@ -66,6 +70,7 @@ function mapStateToProps( { videos }, { match: { params: { streamId } } } ) {
 
 export default connect(mapStateToProps, {
   addVideo,
+  skipPlaying,
   toggleExpanded,
   voteUp,
   voteDown,

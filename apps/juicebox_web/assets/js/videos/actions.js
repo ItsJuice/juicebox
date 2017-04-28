@@ -2,9 +2,9 @@ const ADD_VIDEO = 'ADD_VIDEO';
 const QUEUE_UPDATED = 'QUEUE_UPDATED';
 const PLAYING_CHANGED = 'PLAYING_CHANGED';
 const TOGGLE_EXPANDED = 'TOGGLE_EXPANDED';
+const SKIP_PLAYING = 'SKIP_PLAYING';
 const VOTED_DOWN = 'VOTED_DOWN';
 const VOTED_UP = 'VOTED_UP';
-
 
 function addVideo({ streamId, video }) {
   return {
@@ -60,15 +60,29 @@ function toggleExpanded() {
   }
 }
 
+function skipPlaying({ streamId }) {
+  return {
+    type: SKIP_PLAYING,
+    socketData: {
+      event: 'video.skip_playing',
+      payload: {
+        stream_id: streamId,
+      }
+    }
+  };
+}
+
 export {
   ADD_VIDEO,
   QUEUE_UPDATED,
   PLAYING_CHANGED,
   TOGGLE_EXPANDED,
+  SKIP_PLAYING,
   VOTED_DOWN,
   VOTED_UP,
   addVideo,
   queueUpdated,
+  skipPlaying,
   toggleExpanded,
   voteDown,
   voteUp,

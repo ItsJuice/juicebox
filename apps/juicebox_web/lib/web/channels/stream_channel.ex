@@ -35,6 +35,13 @@ defmodule JuiceboxWeb.StreamChannel do
   end
 
   @spec handle_in(String.t, map, Socket.t) :: {:reply, atom, Socket.t}
+  def handle_in("video.skip_playing", %{"stream_id" => stream_id} = _, socket) do
+    Stream.skip(stream_id)
+
+    {:reply, :ok, socket}
+  end
+
+  @spec handle_in(String.t, map, Socket.t) :: {:reply, atom, Socket.t}
   def handle_in("reaction.sent", %{"stream_id" => stream_id, "video" => video, "frame" => frame}, socket) do
     Reactions.put(stream_id, socket.assigns.user_id, %{video: video, frame: frame})
 

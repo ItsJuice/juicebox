@@ -1,10 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
+import show from '../lib/show-when';
 import styles from './video.scss';
 import ExpandButton from './buttons/expand.svg';
 import MinimiseButton from './buttons/minimise.svg';
+import Boo from './buttons/boo.svg';
 
 class Video extends Component {
+  skipPlaying = () => {
+    this.props.skipPlaying({ streamId: this.props.streamId });
+  }
+
   renderVideo() {
     if (!this.props.video || !this.props.expanded) { return null; }
 
@@ -25,10 +31,15 @@ class Video extends Component {
                    className={ styles['video-state-button'] } />;
   }
 
+  renderBooButton = () => {
+    return <Boo className={ styles.boo } onClick={ this.skipPlaying } />;
+  }
+
   renderTitle() {
-    return <h3 className={ styles['video-title'] }>
-             { this.props.video ? this.props.video.title : 'No video added' }
-           </h3>;
+    return <div className={ styles['video-title'] }>
+             { show(this.renderBooButton).when(this.props.video) }
+             <h3>{ this.props.video ? this.props.video.title : 'No video added' }</h3>
+           </div>;
   }
 
   renderContainer() {
@@ -60,6 +71,8 @@ Video.propTypes = {
   playingStartTime: PropTypes.number,
   toggleExpanded: PropTypes.func,
   expanded: PropTypes.bool,
+  skipPlaying: PropTypes.func,
+  streamId: PropTypes.string,
 }
 
 export default Video;

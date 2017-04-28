@@ -34,9 +34,20 @@
   display: flex;
   width: 100%;
   min-height: 50px;
-  padding: 0 50px;
+  padding: 0 50px 0 0;
   font-size: 17px;
   background-color: #f2f2f2;
   align-items: center;
+  h3 {
+    padding: 10px 0 10px 20px;
+  }
+}
+
+.boo {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  flex-shrink: 0;
+  align-self: flex-start;
 }
 
