@@ -2,28 +2,44 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Search from '../search/search';
 import Reactions from '../reactions/reactions';
-import { addVideo, toggleExpanded } from './actions';
+import { addVideo, toggleExpanded, voteDown, voteUp } from './actions';
 import Video from './video';
 import VideoList from './video-list';
 import styles from './video-page.scss';
 
 class VideoPage extends Component {
   render() {
-    const { queue, playing, playingStartTime, expanded, toggleExpanded } = this.props;
+    const {
+      expanded,
+      playing,
+      playingStartTime,
+      queue,
+      streamId,
+      toggleExpanded,
+      votes,
+      voteDown,
+      voteUp,
+    } = this.props;
 
     return (
       <div className={ styles['video-page'] }>
-        <Search streamId={ this.props.streamId } />
+        <Search streamId={ streamId } />
         <div className={ styles['main-column'] }>
           <Video video={ playing }
                  playingStartTime={ playingStartTime }
                  expanded={ expanded }
-                 toggleExpanded={ toggleExpanded } />
-          <Reactions streamId={this.props.streamId} />
+                 toggleExpanded={ toggleExpanded }
+          />
+          <Reactions streamId={ streamId } />
         </div>
         <div className={ styles['side-column']} >
-          <VideoList videos={ queue }
-                     addVideo={ addVideo } />
+          <VideoList addVideo={ addVideo }
+                     streamId={ streamId }
+                     videos={ queue }
+                     votes={ votes }
+                     voteDown={ voteDown }
+                     voteUp={ voteUp }
+          />
         </div>
 
       </div>
@@ -39,10 +55,18 @@ VideoPage.propTypes = {
   playingStartTime: PropTypes.number,
   expanded: PropTypes.bool,
   toggleExpanded: PropTypes.func,
+  votes: PropTypes.object,
+  voteDown: PropTypes.func,
+  voteUp: PropTypes.func,
 };
 
 function mapStateToProps( { videos }, { match: { params: { streamId } } } ) {
   return Object.assign({}, videos, { streamId });
 }
 
-export default connect(mapStateToProps, { addVideo, toggleExpanded })(VideoPage);
+export default connect(mapStateToProps, {
+  addVideo,
+  toggleExpanded,
+  voteUp,
+  voteDown,
+})(VideoPage);

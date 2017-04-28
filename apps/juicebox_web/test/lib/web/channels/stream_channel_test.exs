@@ -53,7 +53,7 @@ defmodule JuiceboxWeb.StreamChannelTest do
       push(socket, "video.added", @payload)
       :timer.sleep(5000);
       {:ok, state} = Stream.playing(@stream_id)
-      assert state == %{video: @video}
+      assert state == %{video: @video, votes: 0}
     end
   end
 

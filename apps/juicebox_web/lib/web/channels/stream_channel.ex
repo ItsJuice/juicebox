@@ -43,6 +43,20 @@ defmodule JuiceboxWeb.StreamChannel do
     {:reply, :ok, socket}
   end
 
+  @spec handle_in(String.t, map, Socket.t) :: {:reply, atom, Socket.t}
+  def handle_in("video.vote_up", %{"stream_id" => stream_id, "video_id" => video_id} = _, socket) do
+    {:ok, state} = Stream.vote_up(stream_id, video_id)
+
+    {:reply, :ok, socket}
+  end
+
+  @spec handle_in(String.t, map, Socket.t) :: {:reply, atom, Socket.t}
+  def handle_in("video.vote_down", %{"stream_id" => stream_id, "video_id" => video_id} = _, socket) do
+    {:ok, state} = Stream.vote_down(stream_id, video_id)
+
+    {:reply, :ok, socket}
+  end
+
   @spec handle_info(map, Socket.t) :: {:noreply, Socket.t}
   def handle_info(%{type: _} = event, socket) do
 

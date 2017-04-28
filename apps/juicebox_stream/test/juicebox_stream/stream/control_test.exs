@@ -11,9 +11,9 @@ defmodule JuiceboxStream.Stream.ControlTests do
         timer: nil
       },
       videos: {
-        %{ track_id: 1, votes: 0 },
-        %{ track_id: 2, votes: 0 },
-        %{ track_id: 3, votes: 0 }
+        %{ video: %{ video_id: 1 }, votes: 0 },
+        %{ video: %{ video_id: 2 }, votes: 0 },
+        %{ video: %{ video_id: 3 }, votes: 0 }
       }
     ]
   end
@@ -52,11 +52,11 @@ defmodule JuiceboxStream.Stream.ControlTests do
     end
   end
 
-  describe ".vote" do
+  describe ".vote_up" do
     test "increments the vote count on a given track", ctx do
       {v1, v2, _} = ctx.videos
 
-      state = Control.vote(%{queue: [v1, v2]}, v1.track_id)
+      state = Control.vote_up(%{queue: [v1, v2]}, v1.video.video_id)
       %{queue: [video_1, video_2]} = state
 
       assert video_1.votes == 1
@@ -67,14 +67,14 @@ defmodule JuiceboxStream.Stream.ControlTests do
       {v1, v2, v3} = ctx.videos
 
       state = %{queue: [v1, v2, v3]}
-              |> Control.vote(v2.track_id)
-              |> Control.vote(v2.track_id)
-              |> Control.vote(v3.track_id)
+              |> Control.vote_up(v2.video.video_id)
+              |> Control.vote_up(v2.video.video_id)
+              |> Control.vote_up(v3.video.video_id)
       %{queue: [first, second, third]} = state
 
-      assert first.track_id == 2
-      assert second.track_id == 3
-      assert third.track_id == 1
+      assert first.video.video_id == 2
+      assert second.video.video_id == 3
+      assert third.video.video_id == 1
     end
   end
 end

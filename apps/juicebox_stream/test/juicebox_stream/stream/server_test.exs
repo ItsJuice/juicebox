@@ -13,8 +13,7 @@ defmodule JuiceboxStream.Stream.ServerTests do
 
   defp create_track(track_id, attrs \\ %{}) do
     %Track{
-      track_id: track_id,
-      video: Map.merge(%Video{title: "Video", duration: 30}, attrs)
+      video: Map.merge(%Video{title: "Video", duration: 30, video_id: track_id}, attrs)
     }
   end
 
@@ -126,7 +125,7 @@ defmodule JuiceboxStream.Stream.ServerTests do
     end
   end
 
-  describe ".vote" do
+  describe ".vote_up" do
     test "increments the vote count for a given track", ctx do
       Stream.add(@stream, ctx.track)
       Stream.add(@stream, ctx.track_1)
@@ -135,11 +134,11 @@ defmodule JuiceboxStream.Stream.ServerTests do
       {:ok, [track, _]} = Stream.queue(@stream)
       assert track.votes == 0
 
-      Stream.vote(@stream, 1)
+      Stream.vote_up(@stream, 1)
       {:ok, [track, _]} = Stream.queue(@stream)
       assert track.votes == 1
 
-      Stream.vote(@stream, 1)
+      Stream.vote_up(@stream, 1)
       {:ok, [track, _]} = Stream.queue(@stream)
       assert track.votes == 2
 
@@ -158,14 +157,14 @@ defmodule JuiceboxStream.Stream.ServerTests do
         %{ctx.track_2 | votes: 0}
       ]} == Stream.queue(@stream)
 
-      Stream.vote(@stream, 2)
+      Stream.vote_up(@stream, 2)
       assert {:ok, [
         %{ctx.track_2 | votes: 1},
         %{ctx.track_1 | votes: 0}
       ]} == Stream.queue(@stream)
 
-      Stream.vote(@stream, 1)
-      Stream.vote(@stream, 1)
+      Stream.vote_up(@stream, 1)
+      Stream.vote_up(@stream, 1)
       assert {:ok, [
         %{ctx.track_1 | votes: 2},
         %{ctx.track_2 | votes: 1}
@@ -228,9 +227,9 @@ defmodule JuiceboxStream.Stream.ServerTests do
 
       assert Stream.playing(@stream) == {:ok, ctx.track}
 
-      Stream.vote(@stream, 2)
-      Stream.vote(@stream, 2)
-      Stream.vote(@stream, 1)
+      Stream.vote_up(@stream, 2)
+      Stream.vote_up(@stream, 2)
+      Stream.vote_up(@stream, 1)
 
       sleep_until_next_track()
       assert Stream.playing(@stream) == {:ok, %{ctx.track_2 | votes: 2}}

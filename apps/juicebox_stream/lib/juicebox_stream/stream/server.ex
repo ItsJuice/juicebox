@@ -68,10 +68,17 @@ defmodule JuiceboxStream.Stream.Server do
   end
 
   @doc """
-  Adds a vote to a given %Track{}
+  Votes up a given %Track{}
   """
-  def vote(stream_id, track_id) do
-    GenServer.cast(via_tuple(stream_id), {:vote, track_id})
+  def vote_up(stream_id, track_id) do
+    GenServer.call(via_tuple(stream_id), {:vote_up, track_id})
+  end
+
+  @doc """
+  Votes down a given %Track{}
+  """
+  def vote_down(stream_id, track_id) do
+    GenServer.call(via_tuple(stream_id), {:vote_down, track_id})
   end
 
   @doc """
@@ -138,8 +145,16 @@ defmodule JuiceboxStream.Stream.Server do
     {:reply, {:ok, id}, state}
   end
 
-  def handle_cast({:vote, track_id}, state) do
-    {:noreply, Control.vote(state, track_id)}
+  def handle_call({:vote_up, track_id}, _from, state) do
+    new_state = Control.vote_up(state, track_id)
+    broadcast(state.id, @actions[:QUEUE_UPDATED], %{ videos: new_state.queue })
+    {:reply, {:ok, new_state}, new_state}
+  end
+
+  def handle_call({:vote_down, track_id}, _from, state) do
+    new_state = Control.vote_down(state, track_id)
+    broadcast(state.id, @actions[:QUEUE_UPDATED], %{ videos: new_state.queue })
+    {:reply, {:ok, new_state}, new_state}
   end
 
   def handle_info(:next, state) do

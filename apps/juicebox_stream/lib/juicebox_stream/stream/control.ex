@@ -22,15 +22,29 @@ defmodule JuiceboxStream.Stream.Control do
   end
 
   def add_track(%{queue: queue} = state, track) do
-    new_queue = queue ++ [track]
+    # TODO: use Track struct
+    track_with_votes = Map.merge(track, %{votes: 0})
+    new_queue = queue ++ [track_with_votes]
     %{state | queue: new_queue}
   end
 
-  def vote(%{queue: queue} = state, track_id) do
-    track_index = Enum.find_index(queue, fn(x) -> x.track_id == track_id end)
+  def vote_up(%{queue: queue} = state, video_id) do
+    track_index = Enum.find_index(queue, fn(x) -> x.video.video_id == video_id end)
 
     track = Enum.at(queue, track_index)
             |> Map.update!(:votes, &(&1 + 1))
+
+    new_queue = List.update_at(queue, track_index, fn(_) -> track end)
+                |> Enum.sort(&(&1.votes > &2.votes))
+
+    %{state | queue: new_queue}
+  end
+
+  def vote_down(%{queue: queue} = state, video_id) do
+    track_index = Enum.find_index(queue, fn(x) -> x.video.video_id == video_id end)
+
+    track = Enum.at(queue, track_index)
+            |> Map.update!(:votes, &(&1 - 1))
 
     new_queue = List.update_at(queue, track_index, fn(_) -> track end)
                 |> Enum.sort(&(&1.votes > &2.votes))

@@ -5,11 +5,25 @@ import {
   RECEIVE_TERM,
   RECEIVE_RESULTS,
   TOGGLE_EXPANDED,
+  VOTED_DOWN,
+  VOTED_UP,
 } from './actions';
 
 const initialState = {
-  expanded: true
+  expanded: true,
+  votes: {}
 };
+
+function vote(state, videoId, direction) {
+  let { votes } = state;
+
+  const vote = votes[videoId];
+  if (vote !== direction) {
+    votes = Object.assign({}, votes, { [videoId]: direction });
+  }
+
+  return Object.assign({}, state, { votes });
+}
 
 function initialTime({ time }) {
   return isNil(time) ? 0 : Math.round(time / 1000);
@@ -36,14 +50,18 @@ function videos(state = initialState, action) {
     case PLAYING_CHANGED:
       return Object.assign({}, state,
         {
-          playing: action.playing.video,
+          playing: action.playing && action.playing.video,
           playingStartTime: initialTime(action),
-          playingUpdated: (new Date()).getTime()
+          playingUpdated: (new Date()).getTime(),
         });
     case TOGGLE_EXPANDED:
       return Object.assign({}, state, updatePlayingStartTime(state), {
         expanded: !state.expanded
       });
+    case VOTED_DOWN:
+      return vote(state, action.videoId, false);
+    case VOTED_UP:
+      return vote(state, action.videoId, true);
     default:
       return state;
   }
