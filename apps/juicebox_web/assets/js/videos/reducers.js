@@ -5,12 +5,14 @@ import {
   RECEIVE_TERM,
   RECEIVE_RESULTS,
   TOGGLE_EXPANDED,
+  SKIP_RATIO_CHANGED,
   VOTED_DOWN,
   VOTED_UP,
 } from './actions';
 
 const initialState = {
   expanded: true,
+  skipRatio: 0,
   votes: {}
 };
 
@@ -47,6 +49,8 @@ function videos(state = initialState, action) {
       return Object.assign({}, state, { results: action.payload });
     case QUEUE_UPDATED:
       return Object.assign({}, state, { queue: action.videos });
+    case SKIP_RATIO_CHANGED:
+      return Object.assign({}, state, { skipRatio: action.ratio });
     case PLAYING_CHANGED:
       return Object.assign({}, state,
         {

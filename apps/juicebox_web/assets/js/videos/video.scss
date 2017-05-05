@@ -49,5 +49,34 @@
   cursor: pointer;
   flex-shrink: 0;
   align-self: flex-start;
+  animation: jiggle 0.2s infinite;
+
+  &.skip-1 {
+    animation: none;
+  }
+
+  &.skip-2 {
+    animation-duration: 0.7s;
+  }
+
+  &.skip-3 {
+    animation-duration: 0.4s;
+  }
+
+  &.skip-4 {
+    animation-duration: 0.2s;
+  }
+
+  &.skip-5 {
+    animation-duration: 0.1s;
+  }
 }
 
+@keyframes jiggle {
+  0% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}

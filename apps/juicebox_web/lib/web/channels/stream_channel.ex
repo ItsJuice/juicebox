@@ -36,7 +36,13 @@ defmodule JuiceboxWeb.StreamChannel do
 
   @spec handle_in(String.t, map, Socket.t) :: {:reply, atom, Socket.t}
   def handle_in("video.skip_playing", %{"stream_id" => stream_id} = _, socket) do
-    Stream.skip(stream_id)
+    Presence.update(socket, socket.assigns.user_id, %{
+      skipped: current_video_id(stream_id)
+    });
+
+    update_skip_ratio(socket, stream_id)
+
+    if (skip_ratio(socket, stream_id) >= 0.5), do: Stream.skip(stream_id)
 
     {:reply, :ok, socket}
   end
@@ -65,7 +71,16 @@ defmodule JuiceboxWeb.StreamChannel do
   end
 
   @spec handle_info(map, Socket.t) :: {:noreply, Socket.t}
-  def handle_info(%{type: _} = event, socket) do
+  def handle_info({stream_id, %{type: "PLAYING_CHANGED"} = event}, socket) do
+    update_skip_ratio(socket, stream_id)
+
+    broadcast! socket, "remote.action", event
+
+    {:noreply, socket}
+  end
+
+  @spec handle_info(map, Socket.t) :: {:noreply, Socket.t}
+  def handle_info({_, %{type: _} = event}, socket) do
 
     broadcast! socket, "remote.action", event
 
@@ -95,13 +110,17 @@ defmodule JuiceboxWeb.StreamChannel do
       {:error, _} -> nil
     end
 
+    update_skip_ratio(socket, stream_id)
     {:noreply, socket}
   end
 
   @spec terminate(String.t, Socket.t) :: atom
   def terminate(_reason, socket) do
-    Reactions.delete(socket.assigns.stream_id, socket.assigns.user_id)
+    stream_id = socket.assigns.stream_id
+    Reactions.delete(stream_id, socket.assigns.user_id)
     broadcast_reaction(socket, %{user_id: socket.assigns.user_id, video: nil})
+
+    update_skip_ratio(socket, stream_id)
     :ok
   end
 
@@ -120,5 +139,25 @@ defmodule JuiceboxWeb.StreamChannel do
 
   defp send_reaction(method, socket, data) do
     method.(socket, "remote.action", Map.put(data, "type", "NEW_REACTION"))
+  end
+
+  defp update_skip_ratio(socket, stream_id) do
+    ratio = skip_ratio(socket, stream_id)
+    broadcast! socket, "remote.action", %{type: "SKIP_RATIO_CHANGED", ratio: ratio}
+  end
+
+  defp skip_ratio(socket, stream_id) do
+    video = current_video_id(stream_id)
+    voted = Presence.list(socket)
+    |> Enum.reduce(0, fn({_, %{ metas: [user] }}, acc) -> if (Map.get(user, :skipped) == video), do: acc + 1, else: acc end)
+
+    IO.inspect voted / map_size(Presence.list(socket))
+  end
+
+  defp current_video_id(stream_id) do
+    case Stream.playing(stream_id) do
+      {:ok, %{ video: %{ video_id: video_id } } } -> video_id
+      _ -> nil
+    end
   end
 end

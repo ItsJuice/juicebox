@@ -15,6 +15,7 @@ class VideoPage extends Component {
       playingStartTime,
       queue,
       skipPlaying,
+      skipRatio,
       streamId,
       toggleExpanded,
       votes,
@@ -31,6 +32,7 @@ class VideoPage extends Component {
                  expanded={ expanded }
                  toggleExpanded={ toggleExpanded }
                  skipPlaying={ skipPlaying }
+                 skipRatio={ skipRatio }
                  streamId={ streamId }
           />
           <Reactions streamId={ streamId } />
@@ -59,6 +61,7 @@ VideoPage.propTypes = {
   expanded: PropTypes.bool,
   toggleExpanded: PropTypes.func,
   skipPlaying: PropTypes.func,
+  skipRatio: PropTypes.number,
   votes: PropTypes.object,
   voteDown: PropTypes.func,
   voteUp: PropTypes.func,

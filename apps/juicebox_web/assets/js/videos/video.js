@@ -6,6 +6,14 @@ import ExpandButton from './buttons/expand.svg';
 import MinimiseButton from './buttons/minimise.svg';
 import Boo from './buttons/boo.svg';
 
+function skipRatioToClassname(ratio, prefix, num = 5) { 
+  let index = Math.round(ratio * num - 1) + 1;
+  index = Math.min(num, index);
+  index = Math.max(1, index);
+
+  return styles[`${prefix}-${index}`];
+}
+
 class Video extends Component {
   skipPlaying = () => {
     this.props.skipPlaying({ streamId: this.props.streamId });
@@ -32,7 +40,9 @@ class Video extends Component {
   }
 
   renderBooButton = () => {
-    return <Boo className={ styles.boo } onClick={ this.skipPlaying } />;
+    const ratioClass = skipRatioToClassname(this.props.skipRatio, 'skip');
+
+    return <Boo className={ `${styles.boo} ${ratioClass}` } onClick={ this.skipPlaying } />;
   }
 
   renderTitle() {
@@ -72,6 +82,7 @@ Video.propTypes = {
   toggleExpanded: PropTypes.func,
   expanded: PropTypes.bool,
   skipPlaying: PropTypes.func,
+  skipRatio: PropTypes.number,
   streamId: PropTypes.string,
 }
 
